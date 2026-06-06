@@ -1,26 +1,77 @@
 # Analogs Comparison
 
-This table is a compact public comparison. It is not a full research log.
+This is a compact public comparison. It is not a full research log.
 
-| Analog | Strengths | Gaps Relative To HARE Trail | Fit |
-| --- | --- | --- | --- |
-| Claude Code Memory | Native Claude continuity, project memory, file-based context. | Less focused on research trails, debriefs, lessons and human-facing work artifacts. | Very high |
-| Claude Memory Bank | Clear file-based continuity for architecture, progress and decisions. | Weaker on anti-bias loops, imported sources and contribution visibility. | High |
-| `claude-memory-skill` | Simple self-updating markdown memory. | Narrower than a full work/research/debrief system. | High |
-| `agent-memory` | Raw logs, curated memory, progressive disclosure. | More runtime-memory oriented, less task-folder and debrief oriented. | High |
-| Cline Memory Bank | Strong task and progress memory pattern. | Less explicit about source boundaries, lessons and human error analysis. | High |
-| `claude-mem` | Automatic capture, retrieval, progressive disclosure. | More machine-first and less inspectable as a human work system. | Medium-high |
-| Oh My Codex | Orchestration, mode state, multi-agent continuity. | Not a full notes, debrief and research artifact system. | Medium-high |
-| Obsidian Stack | Human-readable markdown notes, links, templates, graph and queries. | No agent workflow protocol by default. | Partial but valuable |
-| Electronic Lab Notebooks | Evidence discipline, research logging and auditability. | Less tuned for AI-agent collaboration and coding workflows. | Partial but valuable |
-| Postmortem Template Repos | Strong incident-analysis structure. | Only one layer; no general research, task or memory system. | Narrow |
-| Zettelkasten | Durable linked knowledge and idea development. | Weak on agent workflows, session debriefs and operational evidence unless extended. | Narrow but important |
+## Feature Matrix
+
+| System | Human-readable source of truth | Agent runtime memory | Task/research folders | Debrief/lessons loop | Source/provenance discipline | Main gap relative to HARE Trail |
+| --- | --- | --- | --- | --- | --- | --- |
+| HARE Trail | Yes | Planned layer | Yes | Yes | Core design goal | Skills and integrations still being migrated |
+| Claude Code Memory | Partial | Yes | Partial | Limited | Project memory oriented | Less explicit about research trails, debriefs and private work artifacts |
+| Claude Memory Bank | Yes | Partial | Yes | Limited | File-based | Less focused on anti-error loops and source packets |
+| `claude-memory-skill` | Yes | Partial | Limited | Limited | Basic | Narrower than a full work/research system |
+| `agentmemory` | Partial | Yes | Limited | Partial | Strong citation/provenance features | Runtime-memory first, less human-facing as a work dossier |
+| ReasoningBank | No | Yes | No | Automated success/failure extraction | Benchmark/evaluation oriented | Research framework, not a human work system |
+| Agent Workflow Memory | No | Yes | No | Workflow utility oriented | Benchmark/evaluation oriented | Workflow induction, not broad note/work artifact continuity |
+| Cline Memory Bank | Yes | Partial | Yes | Limited | File-based | Less explicit about bias, debriefs and contribution visibility |
+| `claude-mem` | Partial | Yes | No | Partial | Search/retrieval oriented | More machine-first and less inspectable |
+| Oh My Codex | State files | Orchestration state | Partial | No | Mode/state oriented | Orchestration layer, not notes/debrief system |
+| Obsidian stack | Yes | No by default | Possible | Custom | Link/source discipline possible | Needs agent workflow protocol |
+| Electronic Lab Notebooks | Yes | No | Research logs | Limited | Strong audit tradition | Less tuned for AI-agent and software workflows |
+| Postmortem templates | Yes | No | No | Strong for incidents | Evidence depends on practice | Only one layer |
+| Zettelkasten | Yes | No | No | No | Link discipline | Weak on agent workflows and session learning |
+| OriginTrail DKG | Graph-first | Possible | No | No | Strong verifiable provenance | Infrastructure substrate, not a human-readable work system |
+
+## Closest Analogs By Layer
+
+Closest to durable file memory:
+
+- Claude Memory Bank;
+- Cline Memory Bank;
+- Claude Code Memory;
+- Obsidian-based systems.
+
+Closest to runtime memory:
+
+- Claude Code Memory;
+- `agentmemory`;
+- `claude-mem`;
+- ReasoningBank.
+
+Closest to workflow learning:
+
+- ReasoningBank;
+- Agent Workflow Memory;
+- postmortem practice;
+- debrief/lessons systems.
+
+Closest to provenance infrastructure:
+
+- OriginTrail DKG;
+- `agentmemory`;
+- disciplined Obsidian/source-link setups.
 
 ## Where HARE Trail Should Be Distinct
 
-- human-readable and agent-readable at the same time;
-- research trails and work artifacts as first-class objects;
-- debrief, lessons and postmortem layers kept separate;
-- explicit anti-bias and anti-overtrust philosophy;
-- source-bound work across repositories, sessions and tools;
-- private data separated from reusable system logic.
+- It treats human work as primary and AI memory as a layer.
+- It keeps task folders, sources, journals, trackers, debriefs and lessons together.
+- It separates reusable system logic from private data.
+- It treats user corrections and failed hypotheses as first-class learning material.
+- It is explicitly designed against overtrust, confirmation bias and context drift.
+- It can later add runtime memory, embeddings or graph projections without replacing markdown as the inspectable source of truth.
+
+## Current Weaknesses
+
+- Automatic session capture is not implemented.
+- Session-end distillation is not implemented.
+- Skills and connector scripts are not yet migrated into this repository.
+- Search/index and graph/provenance layers are future work.
+- The public docs are still being extracted from a private research corpus.
+
+## Practical Positioning
+
+HARE Trail should not claim to beat runtime memory tools at automatic capture.
+
+Its stronger claim is different:
+
+> Keep the human-readable path of work intact, then let agents use that path safely.

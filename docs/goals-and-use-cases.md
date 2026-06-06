@@ -2,46 +2,102 @@
 
 ## Goals
 
-- Preserve the path of research, development and decision-making.
-- Make human-agent work readable across sessions and tools.
-- Keep context token-efficient through summaries, indexes and progressive disclosure.
-- Separate reusable workflow logic from private working data.
-- Support debriefs, lessons and postmortems as feedback loops.
-- Keep imported chats, prompts and external research usable as first-class sources.
+HARE Trail exists to make long-running human-agent work recoverable, inspectable and easier to continue.
+
+Primary goals:
+
+- preserve the path of inquiry, not only final answers;
+- keep work readable for humans and reusable by agents;
+- separate reusable workflow logic from private working data;
+- support cross-session, cross-tool and cross-repository continuity;
+- turn mistakes into debriefs, lessons and improved workflows;
+- keep evidence, source boundaries and corrections visible;
+- make context sharing token-efficient through structure and summaries.
+
+Non-goals:
+
+- replacing human judgment with automatic memory;
+- storing private work in the public system repository;
+- making a database or vector store the primary source of truth;
+- turning every note into a heavy process document;
+- promising that bias or hallucination can be eliminated.
 
 ## Use Cases
 
 ### Cross-Repository Development
 
-Track work that spans multiple repositories without scattering private markdown files across each repo root.
+Use HARE Trail when a task spans multiple repositories, tools or pull requests.
+
+Typical artifacts:
+
+- task folder;
+- tracker;
+- journal;
+- source links;
+- verification notes;
+- PR drafts;
+- debrief after mistakes.
 
 ### Research
 
-Preserve questions, hypotheses, sources, summaries, prompts, decision points and next steps.
+Use it when a question changes over time and needs sources, hypotheses, prompts, summaries and interpretation.
 
-### Documentation Work
+Typical artifacts:
 
-Help agents write repository documentation while respecting existing project rules and canonical docs.
+- source packet;
+- file summaries;
+- research tracker;
+- research journal;
+- open questions;
+- external AI prompts when explicitly requested.
 
-### Debriefs And Lessons
+### Document Packet Summaries
 
-Extract repeated failure patterns from sessions so future work can avoid them.
+Use it for imported docs, PDFs, markdown exports, spreadsheets, chat logs and large prompts.
 
-### Postmortems
-
-Handle serious incidents with a heavier structure: timeline, impact, root cause, corrective actions and lessons.
-
-### Contribution And Visibility Logs
-
-Capture invisible work, glue work, self-review material and evidence of contribution.
+The goal is to preserve raw sources while producing summaries that can be used by a human or agent later.
 
 ### AI Chat Imports
 
-Treat important conversations with Claude, Codex, ChatGPT, Gemini, Grok and other tools as source artifacts that can be summarized and reused.
+Important AI conversations can become source artifacts.
 
-## Non-Goals
+They should be distinguished from:
 
-- Replacing human judgment with automatic memory retrieval.
-- Turning all private experience into a public repository.
-- Making a vector database the primary source of truth.
-- Storing personal notes inside the reusable system repository.
+- polished summaries;
+- reusable prompts;
+- durable notes;
+- extracted lessons.
+
+### Debriefs And Lessons
+
+Use debriefs when a session contains mistakes, false hypotheses, user corrections or useful patterns.
+
+Use lessons for distilled future-facing rules.
+
+### Postmortems
+
+Use postmortems only for heavier incident-grade analysis with timeline, impact, root cause and corrective actions.
+
+### Contribution And Visibility Logs
+
+Use contribution logs for invisible work, glue work, review support, self-review evidence and work that should not disappear because it was not a shipped artifact.
+
+### Future Runtime Memory
+
+Runtime memory, search, embeddings and graph projections can be added later.
+
+They should remain layers over inspectable artifacts, not replacements for them.
+
+## Expected Data Repository Shape
+
+The private data repository is expected to contain:
+
+```text
+work-artifacts/
+notes/
+session-debriefs/
+postmortems/
+LESSONS.md
+```
+
+The reusable system repository should contain the workflows, templates and integration code that operate on that data shape.
