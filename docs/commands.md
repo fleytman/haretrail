@@ -2,6 +2,8 @@
 
 HARE Trail commands are workflow contracts. They can be exposed as skills, slash commands, scripts or agent instructions depending on the host tool.
 
+Current maturity: the contracts are documented here, but the installable skill implementations have not been migrated into this repository yet.
+
 ## Command Overview
 
 | Command | Use When | Main Output | Writes To |

@@ -2,6 +2,8 @@
 
 This document describes the intended two-repository setup.
 
+Current maturity: this is a setup contract, not a working installer guide. The connector paths below describe the target shape for Phase 3; they are not shipped by this repository yet.
+
 ## Recommended Layout
 
 ```text
@@ -47,7 +49,7 @@ Data repo:
 
 Claude integrations should expose HARE Trail workflows as skills or slash-command wrappers.
 
-Expected connector shape:
+Target connector shape:
 
 ```text
 ~/.claude/skills/task -> haretrail/integrations/claude/skills/task
@@ -67,7 +69,7 @@ haretrail-data/LESSONS.md
 
 Codex integrations should expose skills through the configured Codex skills directory.
 
-Expected connector shape:
+Target connector shape:
 
 ```text
 ~/.codex/skills/task -> haretrail/skills/task
@@ -88,7 +90,7 @@ Agents often need permission to write outside the current working directory. HAR
 
 ## Phase 3 Work
 
-The connector scripts and wrappers are not fully migrated yet.
+The connector scripts and wrappers are not migrated yet.
 
 Before calling setup complete:
 

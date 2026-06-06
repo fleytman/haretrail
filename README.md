@@ -25,7 +25,9 @@ It is designed to reduce:
 
 This repository is the reusable **system layer**.
 
-It should contain:
+Current maturity: this repository is a documentation-first system scaffold. It explains the reusable workflow contracts and contains migration target directories, but it does not yet ship installable skills, connector scripts or reusable templates.
+
+The target system layer will contain:
 
 - workflow and command contracts;
 - skills and integration wrappers;
@@ -45,6 +47,23 @@ It should not contain:
 - local absolute paths.
 
 Real work belongs in a separate data repository.
+
+Available now:
+
+- system/data boundary rules;
+- public philosophy, goals and use-case documentation;
+- command contracts;
+- Claude/Codex setup contract;
+- analogs comparison;
+- empty migration target directories for skills, integrations, templates, scripts and examples.
+
+Not available yet:
+
+- installable Claude or Codex skills;
+- connector install scripts;
+- reusable templates;
+- sanitized example datasets;
+- clean-checkout setup validation.
 
 ## Recommended Layout
 
@@ -90,12 +109,13 @@ See [Commands](docs/commands.md).
 - [Commands](docs/commands.md)
 - [Claude and Codex Setup](docs/setup-claude-codex.md)
 - [Analogs Comparison](docs/compare-analogs.md)
+- [Status and Roadmap](docs/status-and-roadmap.md)
 
 ## Current Status
 
 Phase 1 is complete: the system/data boundary and repository name are frozen.
 
-Phase 2 is in progress: documentation is being extracted from the private research corpus into a public, reusable shape.
+Phase 2 is complete: the public docs now describe the reusable system without depending on the private research corpus.
 
 Phase 3 is not complete: `skills/`, `integrations/`, `templates/` and `scripts/` are present as migration targets, but the real reusable assets still need to be moved and cleaned.
 

@@ -64,9 +64,9 @@ Closest to provenance infrastructure:
 
 - Automatic session capture is not implemented.
 - Session-end distillation is not implemented.
-- Skills and connector scripts are not yet migrated into this repository.
+- Installable skills and connector scripts are not yet migrated into this repository.
 - Search/index and graph/provenance layers are future work.
-- The public docs are still being extracted from a private research corpus.
+- Clean-checkout setup is not validated yet.
 
 ## Practical Positioning
 
