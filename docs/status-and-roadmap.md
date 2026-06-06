@@ -11,9 +11,9 @@ This file separates what is available now from the target HARE Trail system.
 | Command contracts | Complete | Workflow contracts are documented and reusable skill source folders are present. |
 | Claude/Codex setup contract | Drafted | The intended two-repository setup and permission model are documented. |
 | Skills | Drafted | Reusable skill source folders are present; connector installation is not validated. |
-| Integrations | Planned | `integrations/` is a Phase 3 migration target. |
+| Integrations | Drafted | Source skill links can be installed; tool-specific Claude wrappers are not done. |
 | Templates | Drafted | Reusable templates for core artifact types are present. |
-| Scripts | Planned | `scripts/` is a Phase 3 migration target. |
+| Scripts | Drafted | `install-connectors.sh` exists; validators and smoke tests are not done. |
 | Examples | Drafted | A small fictional data repo fixture is present for future smoke checks. |
 | Clean-checkout install | Not validated | There is no installer yet. |
 
@@ -37,8 +37,8 @@ This file separates what is available now from the target HARE Trail system.
 ### Phase 4: Add Host Integrations
 
 - Add Claude wrappers.
-- Add Codex-compatible skill layout.
-- Add connector install scripts.
+- Add Codex-compatible skill layout. Initial source-link installer is done.
+- Add connector install scripts. Initial source-link installer is done.
 - Validate that generated connectors do not embed private paths.
 
 ### Phase 5: Validate From Clean Checkout

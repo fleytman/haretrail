@@ -2,7 +2,7 @@
 
 This document describes the intended two-repository setup.
 
-Current maturity: this is a setup contract, not a working installer guide. The connector paths below describe the target shape for Phase 3; they are not shipped by this repository yet.
+Current maturity: `scripts/install-connectors.sh` can install source skill symlinks for Codex and agents directories. Claude source links are available behind an explicit flag, but tool-specific Claude wrappers and clean-checkout validation are not complete yet.
 
 ## Recommended Layout
 
@@ -49,7 +49,14 @@ Data repo:
 
 Claude integrations should expose HARE Trail workflows as skills or slash-command wrappers.
 
-Target connector shape:
+Current optional source-link shape:
+
+```text
+~/.claude/skills/task -> haretrail/skills/task
+~/.claude/skills/research -> haretrail/skills/research
+```
+
+Target wrapper shape:
 
 ```text
 ~/.claude/skills/task -> haretrail/integrations/claude/skills/task
@@ -69,7 +76,7 @@ haretrail-data/LESSONS.md
 
 Codex integrations should expose skills through the configured Codex skills directory.
 
-Target connector shape:
+Current connector shape:
 
 ```text
 ~/.codex/skills/task -> haretrail/skills/task
@@ -88,15 +95,30 @@ Agents often need permission to write outside the current working directory. HAR
 - use `HARETRAIL_DATA_DIR` for explicit data access;
 - keep sanitized fixtures in the system repo for tests and examples.
 
-## Phase 3 Work
+## Installer
 
-The connector scripts and wrappers are not migrated yet.
+Dry run first:
+
+```bash
+./scripts/install-connectors.sh --dry-run --data-dir examples/fixture-data-repo
+```
+
+Install Codex and agents skill links:
+
+```bash
+./scripts/install-connectors.sh --data-dir /path/to/haretrail-data
+```
+
+Optionally install Claude source links:
+
+```bash
+./scripts/install-connectors.sh --include-claude --data-dir /path/to/haretrail-data
+```
+
+## Remaining Phase 3 Work
 
 Before calling setup complete:
 
-- migrate the reusable skills;
 - add Claude wrappers;
-- add Codex-compatible skill layout;
-- add an install script;
 - validate setup from a clean checkout;
 - verify no private paths are embedded in generated connectors.

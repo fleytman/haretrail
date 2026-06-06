@@ -55,15 +55,16 @@ Available now:
 - command contracts;
 - reusable skill source folders for the core workflows;
 - reusable templates for core artifact types;
+- connector installer for source skill symlinks;
 - Claude/Codex setup contract;
 - analogs comparison;
 - sanitized fixture data repo for smoke-check development;
-- empty migration target directories for integrations and scripts.
+- migration target directories for remaining integrations and scripts.
 
 Not available yet:
 
 - connector-installed Claude or Codex skills;
-- connector install scripts;
+- tool-specific Claude wrappers;
 - clean-checkout setup validation.
 
 ## Recommended Layout
@@ -118,7 +119,7 @@ Phase 1 is complete: the system/data boundary and repository name are frozen.
 
 Phase 2 is complete: the public docs now describe the reusable system without depending on the private research corpus.
 
-Phase 3 is in progress: reusable skill source folders, templates and a sanitized fixture data repo are present, but integrations, scripts and clean-checkout setup still need to be migrated and validated.
+Phase 3 is in progress: reusable skill source folders, templates, a sanitized fixture data repo and a source-link installer are present, but tool-specific Claude wrappers and clean-checkout setup still need to be migrated and validated.
 
 ## Design Rule
 

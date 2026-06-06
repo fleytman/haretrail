@@ -64,7 +64,7 @@ Closest to provenance infrastructure:
 
 - Automatic session capture is not implemented.
 - Session-end distillation is not implemented.
-- Connector scripts and clean-checkout install are not yet migrated into this repository.
+- Tool-specific Claude wrappers and clean-checkout install validation are not yet complete.
 - Clean-checkout setup has not been validated against the sanitized fixture yet.
 - Search/index and graph/provenance layers are future work.
 - Clean-checkout setup is not validated yet.
