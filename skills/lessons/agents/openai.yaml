@@ -1,0 +1,7 @@
+interface:
+  display_name: "Lessons"
+  short_description: "Читает и обновляет LESSONS.md"
+  default_prompt: "Используй $lessons, чтобы показать, добавить или уточнить уроки в {data-repo}/LESSONS.md."
+
+policy:
+  allow_implicit_invocation: true

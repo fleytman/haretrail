@@ -8,9 +8,9 @@ This file separates what is available now from the target HARE Trail system.
 | --- | --- | --- |
 | System/data boundary | Complete | Reusable system files stay in this repo; private work belongs in a separate data repo. |
 | Public philosophy and goals | Complete | The docs explain the core position, goals and use cases without private history. |
-| Command contracts | Complete | Workflow contracts are documented, but the migrated skill implementations are not present yet. |
+| Command contracts | Complete | Workflow contracts are documented and reusable skill source folders are present. |
 | Claude/Codex setup contract | Drafted | The intended two-repository setup and permission model are documented. |
-| Skills | Planned | `skills/` is a Phase 3 migration target. |
+| Skills | Drafted | Reusable skill source folders are present; connector installation is not validated. |
 | Integrations | Planned | `integrations/` is a Phase 3 migration target. |
 | Templates | Planned | `templates/` is a Phase 3 migration target. |
 | Scripts | Planned | `scripts/` is a Phase 3 migration target. |
@@ -20,7 +20,7 @@ This file separates what is available now from the target HARE Trail system.
 ## Maturity Labels
 
 - `Complete`: the public contract exists and can be used for orientation.
-- `Drafted`: the contract exists, but needs implementation or clean-checkout validation.
+- `Drafted`: the contract or reusable source exists, but needs implementation, installation or clean-checkout validation.
 - `Planned`: directory or concept exists, but reusable assets are not migrated.
 - `Not validated`: the expected behavior has not been tested from a clean checkout.
 
@@ -28,9 +28,9 @@ This file separates what is available now from the target HARE Trail system.
 
 ### Phase 3: Migrate Reusable Assets
 
-- Move reusable skills into `skills/`.
-- Remove hardcoded private paths.
-- Replace private storage assumptions with configuration such as `HARETRAIL_DATA_DIR`.
+- Move reusable skills into `skills/`. Initial source migration is done.
+- Remove hardcoded private paths. Initial skill path sanitization is done.
+- Replace private storage assumptions with configuration such as `HARETRAIL_DATA_DIR`. Initial skill placeholder is `{data-repo}`.
 - Add reusable templates for task folders, research packets, summaries, debriefs and postmortems.
 - Add sanitized examples that demonstrate shape without real private work.
 

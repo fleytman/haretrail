@@ -1,0 +1,7 @@
+interface:
+  display_name: "Research"
+  short_description: "Ведёт исследовательскую задачу с tracker, journal и prompts"
+  default_prompt: "Используй $research, чтобы собрать materials, план исследования, tracker, journal и prompts в {data-repo}."
+
+policy:
+  allow_implicit_invocation: true

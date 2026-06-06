@@ -6,7 +6,7 @@ This is a compact public comparison. It is not a full research log.
 
 | System | Human-readable source of truth | Agent runtime memory | Task/research folders | Debrief/lessons loop | Source/provenance discipline | Main gap relative to HARE Trail |
 | --- | --- | --- | --- | --- | --- | --- |
-| HARE Trail | Yes | Planned layer | Yes | Yes | Core design goal | Skills and integrations still being migrated |
+| HARE Trail | Yes | Planned layer | Yes | Yes | Core design goal | Connectors, templates and clean-checkout setup still being migrated |
 | Claude Code Memory | Partial | Yes | Partial | Limited | Project memory oriented | Less explicit about research trails, debriefs and private work artifacts |
 | Claude Memory Bank | Yes | Partial | Yes | Limited | File-based | Less focused on anti-error loops and source packets |
 | `claude-memory-skill` | Yes | Partial | Limited | Limited | Basic | Narrower than a full work/research system |
@@ -64,7 +64,8 @@ Closest to provenance infrastructure:
 
 - Automatic session capture is not implemented.
 - Session-end distillation is not implemented.
-- Installable skills and connector scripts are not yet migrated into this repository.
+- Connector scripts and clean-checkout install are not yet migrated into this repository.
+- Reusable templates and sanitized examples are not yet migrated.
 - Search/index and graph/provenance layers are future work.
 - Clean-checkout setup is not validated yet.
 

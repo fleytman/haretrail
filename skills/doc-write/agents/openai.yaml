@@ -1,0 +1,7 @@
+interface:
+  display_name: "Doc Write"
+  short_description: "Пишет короткую понятную документацию под стиль репозитория"
+  default_prompt: "Используй $doc-write, чтобы написать или обновить документацию под стиль репозитория или локальных заметок."
+
+policy:
+  allow_implicit_invocation: true

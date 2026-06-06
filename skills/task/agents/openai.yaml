@@ -1,0 +1,7 @@
+interface:
+  display_name: "Task"
+  short_description: "Создаёт и ведёт task-folders в work-artifacts"
+  default_prompt: "Используй $task, чтобы найти или создать task-folder, завести tracker/journal и вести работу в {data-repo}/work-artifacts."
+
+policy:
+  allow_implicit_invocation: true

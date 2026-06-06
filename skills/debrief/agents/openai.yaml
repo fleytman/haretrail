@@ -1,0 +1,7 @@
+interface:
+  display_name: "Debrief"
+  short_description: "Читает и обновляет session debriefs"
+  default_prompt: "Используй $debrief, чтобы создать, обогатить или показать session debriefs в {data-repo}."
+
+policy:
+  allow_implicit_invocation: true

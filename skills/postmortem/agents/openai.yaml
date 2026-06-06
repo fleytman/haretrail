@@ -1,0 +1,7 @@
+interface:
+  display_name: "Postmortem"
+  short_description: "Пишет incident-grade postmortems"
+  default_prompt: "Используй $postmortem, чтобы создать или обновить подробный postmortem в {data-repo}/postmortems."
+
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Summary"
+  short_description: "Собирает source packet и summaries по документам"
+  default_prompt: "Используй $summary, чтобы обработать пакет документов, собрать sources, file summaries, цитаты и prompts в {data-repo}."
+
+policy:
+  allow_implicit_invocation: true
