@@ -14,7 +14,7 @@ This file separates what is available now from the target HARE Trail system.
 | Integrations | Planned | `integrations/` is a Phase 3 migration target. |
 | Templates | Drafted | Reusable templates for core artifact types are present. |
 | Scripts | Planned | `scripts/` is a Phase 3 migration target. |
-| Examples | Planned | `examples/` should contain sanitized fixtures only. |
+| Examples | Drafted | A small fictional data repo fixture is present for future smoke checks. |
 | Clean-checkout install | Not validated | There is no installer yet. |
 
 ## Maturity Labels
@@ -32,7 +32,7 @@ This file separates what is available now from the target HARE Trail system.
 - Remove hardcoded private paths. Initial skill path sanitization is done.
 - Replace private storage assumptions with configuration such as `HARETRAIL_DATA_DIR`. Initial skill placeholder is `{data-repo}`.
 - Add reusable templates for task folders, research packets, summaries, debriefs and postmortems. Initial template migration is done.
-- Add sanitized examples that demonstrate shape without real private work.
+- Add sanitized examples that demonstrate shape without real private work. Initial fixture data repo is done.
 
 ### Phase 4: Add Host Integrations
 
