@@ -1,17 +1,38 @@
 # Templates
 
-Reusable templates will live here.
+Reusable HARE Trail templates live here.
 
-Status: Phase 3 migration target.
+Status: Phase 3 migration started.
 
-Planned templates:
+Available templates:
 
-- task folder;
-- research packet;
-- summary packet;
-- debrief;
-- postmortem;
-- contribution log;
-- verification artifact.
+- `task-folder/`
+- `summary-packet/`
+- `research-task/`
+- `contribution-log/`
+- `debrief.md`
+- `postmortem.md`
+- `verification-artifact.md`
 
-Templates should be generic and free of private project context.
+## Placeholder Convention
+
+Templates use `{{placeholder}}` values for user-filled fields.
+
+Common placeholders:
+
+- `{{title}}`
+- `{{slug}}`
+- `{{created_date}}`
+- `{{updated_date}}`
+- `{{owner}}`
+- `{{data_repo}}`
+- `{{source_period}}`
+- `{{status}}`
+
+## Rules
+
+- Keep templates generic and free of private project context.
+- Do not include real work artifacts, real debriefs or private lessons.
+- Prefer explicit uncertainty over polished but unsupported claims.
+- Preserve source boundaries: originals, summaries and interpretations should stay distinguishable.
+- Add prompts only when a workflow explicitly asks for prompt artifacts.

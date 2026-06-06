@@ -54,15 +54,15 @@ Available now:
 - public philosophy, goals and use-case documentation;
 - command contracts;
 - reusable skill source folders for the core workflows;
+- reusable templates for core artifact types;
 - Claude/Codex setup contract;
 - analogs comparison;
-- empty migration target directories for integrations, templates, scripts and examples.
+- empty migration target directories for integrations, scripts and examples.
 
 Not available yet:
 
 - connector-installed Claude or Codex skills;
 - connector install scripts;
-- reusable templates;
 - sanitized example datasets;
 - clean-checkout setup validation.
 
@@ -118,7 +118,7 @@ Phase 1 is complete: the system/data boundary and repository name are frozen.
 
 Phase 2 is complete: the public docs now describe the reusable system without depending on the private research corpus.
 
-Phase 3 is in progress: reusable skill source folders are present, but integrations, templates, scripts, examples and clean-checkout setup still need to be migrated and validated.
+Phase 3 is in progress: reusable skill source folders and templates are present, but integrations, scripts, examples and clean-checkout setup still need to be migrated and validated.
 
 ## Design Rule
 

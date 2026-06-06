@@ -12,7 +12,7 @@ This file separates what is available now from the target HARE Trail system.
 | Claude/Codex setup contract | Drafted | The intended two-repository setup and permission model are documented. |
 | Skills | Drafted | Reusable skill source folders are present; connector installation is not validated. |
 | Integrations | Planned | `integrations/` is a Phase 3 migration target. |
-| Templates | Planned | `templates/` is a Phase 3 migration target. |
+| Templates | Drafted | Reusable templates for core artifact types are present. |
 | Scripts | Planned | `scripts/` is a Phase 3 migration target. |
 | Examples | Planned | `examples/` should contain sanitized fixtures only. |
 | Clean-checkout install | Not validated | There is no installer yet. |
@@ -31,7 +31,7 @@ This file separates what is available now from the target HARE Trail system.
 - Move reusable skills into `skills/`. Initial source migration is done.
 - Remove hardcoded private paths. Initial skill path sanitization is done.
 - Replace private storage assumptions with configuration such as `HARETRAIL_DATA_DIR`. Initial skill placeholder is `{data-repo}`.
-- Add reusable templates for task folders, research packets, summaries, debriefs and postmortems.
+- Add reusable templates for task folders, research packets, summaries, debriefs and postmortems. Initial template migration is done.
 - Add sanitized examples that demonstrate shape without real private work.
 
 ### Phase 4: Add Host Integrations

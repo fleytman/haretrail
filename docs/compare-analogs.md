@@ -65,7 +65,7 @@ Closest to provenance infrastructure:
 - Automatic session capture is not implemented.
 - Session-end distillation is not implemented.
 - Connector scripts and clean-checkout install are not yet migrated into this repository.
-- Reusable templates and sanitized examples are not yet migrated.
+- Sanitized examples are not yet migrated.
 - Search/index and graph/provenance layers are future work.
 - Clean-checkout setup is not validated yet.
 
