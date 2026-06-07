@@ -25,7 +25,7 @@ It is designed to reduce:
 
 This repository is the reusable **system layer**.
 
-Current maturity: this repository is a documentation-first system scaffold. It explains the reusable workflow contracts and contains migration target directories, but it does not yet ship installable skills, connector scripts or reusable templates.
+Current maturity: this repository is an early reusable system layer. It includes public docs, reusable skill sources, templates, a source-link connector installer, a data repo initializer and a sanitized fixture data repo. Claude/Codex runtime loading is not fully validated yet.
 
 The target system layer will contain:
 
@@ -56,6 +56,7 @@ Available now:
 - reusable skill source folders for the core workflows;
 - reusable templates for core artifact types;
 - connector installer for source skill symlinks;
+- data repo initializer for private scaffold creation;
 - Claude/Codex setup contract;
 - analogs comparison;
 - sanitized fixture data repo for smoke-check development;
@@ -63,9 +64,9 @@ Available now:
 
 Not available yet:
 
-- connector-installed Claude or Codex skills;
+- proven Claude or Codex runtime loading;
 - tool-specific Claude wrappers;
-- clean-checkout setup validation.
+- Docker/container smoke validation.
 
 ## Recommended Layout
 
@@ -119,7 +120,7 @@ Phase 1 is complete: the system/data boundary and repository name are frozen.
 
 Phase 2 is complete: the public docs now describe the reusable system without depending on the private research corpus.
 
-Phase 3 is in progress: reusable skill source folders, templates, a sanitized fixture data repo and a source-link installer are present, but tool-specific Claude wrappers and clean-checkout setup still need to be migrated and validated.
+Phase 3 is in progress: reusable skill source folders, templates, a sanitized fixture data repo, a source-link installer and a data repo initializer are present. Tool-specific Claude wrappers, runtime loading validation and Docker/container smoke still need to be completed.
 
 ## Design Rule
 

@@ -10,17 +10,19 @@ This file separates what is available now from the target HARE Trail system.
 | Public philosophy and goals | Complete | The docs explain the core position, goals and use cases without private history. |
 | Command contracts | Complete | Workflow contracts are documented and reusable skill source folders are present. |
 | Claude/Codex setup contract | Drafted | The intended two-repository setup and permission model are documented. |
-| Skills | Drafted | Reusable skill source folders are present; connector installation is not validated. |
-| Integrations | Drafted | Source skill links can be installed; tool-specific Claude wrappers are not done. |
+| Skills | Install-tested | Reusable skill source folders are present; source-link installation has been validated from a clean local checkout. |
+| Integrations | Drafted | Source skill links can be installed; actual Claude/Codex runtime loading and tool-specific Claude wrappers are not done. |
 | Templates | Drafted | Reusable templates for core artifact types are present. |
-| Scripts | Drafted | `install-connectors.sh` exists; validators and smoke tests are not done. |
+| Scripts | Drafted | `install-connectors.sh` and `init-data-repo.sh` exist; validators, runtime smoke tests and Docker smoke are not done. |
 | Examples | Drafted | A small fictional data repo fixture is present for future smoke checks. |
-| Clean-checkout install | Not validated | There is no installer yet. |
+| Clean-checkout install | Install-tested | Source-link install was validated from a local clean checkout into temp homes. |
+| Runtime loading | Not validated | Claude/Codex loading has not been proven beyond installed source links. |
 
 ## Maturity Labels
 
 - `Complete`: the public contract exists and can be used for orientation.
 - `Drafted`: the contract or reusable source exists, but needs implementation, installation or clean-checkout validation.
+- `Install-tested`: installer mechanics were verified, but host-tool runtime behavior is not fully proven.
 - `Planned`: directory or concept exists, but reusable assets are not migrated.
 - `Not validated`: the expected behavior has not been tested from a clean checkout.
 
@@ -39,13 +41,15 @@ This file separates what is available now from the target HARE Trail system.
 - Add Claude wrappers.
 - Add Codex-compatible skill layout. Initial source-link installer is done.
 - Add connector install scripts. Initial source-link installer is done.
+- Add data repo init script. Initial shell-first script is done.
 - Validate that generated connectors do not embed private paths.
 
 ### Phase 5: Validate From Clean Checkout
 
-- Create a disposable data repo fixture.
+- Create a disposable data repo with `init-data-repo.sh`.
 - Install connectors into a clean host-tool configuration.
 - Run smoke checks against the fixture.
+- Add optional Docker/container smoke for install and fixture checks.
 - Document the supported setup path.
 
 ### Later: Runtime Memory And Retrieval

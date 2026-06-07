@@ -2,7 +2,7 @@
 
 HARE Trail commands are workflow contracts. They can be exposed as skills, slash commands, scripts or agent instructions depending on the host tool.
 
-Current maturity: reusable skill source folders are present under `skills/`, but connector installation and clean-checkout validation are not done yet.
+Current maturity: reusable skill source folders are present under `skills/`, source-link connector installation has been validated from a clean local checkout, and `scripts/init-data-repo.sh` can create a minimal private data scaffold. Actual Claude/Codex runtime loading is not fully validated yet.
 
 ## Command Overview
 

@@ -2,7 +2,7 @@
 
 This document describes the intended two-repository setup.
 
-Current maturity: `scripts/install-connectors.sh` can install source skill symlinks for Codex and agents directories. Claude source links are available behind an explicit flag, but tool-specific Claude wrappers and clean-checkout validation are not complete yet.
+Current maturity: `scripts/install-connectors.sh` can install source skill symlinks for Codex and agents directories, and `scripts/init-data-repo.sh` can create a minimal private data repo scaffold. Claude source links are available behind an explicit flag, but tool-specific Claude wrappers and actual Claude/Codex runtime loading are not complete yet.
 
 ## Recommended Layout
 
@@ -23,6 +23,8 @@ export HARETRAIL_DATA_DIR="/path/to/haretrail-data"
 ```
 
 The system repo should not hardcode personal paths.
+
+User-local HARE Trail configuration is expected to live outside the public repo, for example under `~/.haretrail/`. Project-local ignored config may be added later for HARE Trail routing, but it must not override the target repository's own coding or documentation rules.
 
 ## What Belongs Where
 
@@ -115,10 +117,37 @@ Optionally install Claude source links:
 ./scripts/install-connectors.sh --include-claude --data-dir /path/to/haretrail-data
 ```
 
+## Data Repo Initialization
+
+Dry run first:
+
+```bash
+./scripts/init-data-repo.sh --dry-run --target /tmp/haretrail-data-demo
+```
+
+Create a private data repo scaffold:
+
+```bash
+./scripts/init-data-repo.sh --target /path/to/haretrail-data
+```
+
+Create a private data repo scaffold plus an initial research folder:
+
+```bash
+./scripts/init-data-repo.sh \
+  --target /path/to/haretrail-data \
+  --initial-task first-research-thread \
+  --task-title "First research thread" \
+  --task-kind research
+```
+
+The initializer writes missing files only. It creates README, tracker, journal, lessons and core data directories, but it does not copy private corpus and does not write into home-directory tool configs.
+
 ## Remaining Phase 3 Work
 
 Before calling setup complete:
 
 - add Claude wrappers;
-- validate setup from a clean checkout;
-- verify no private paths are embedded in generated connectors.
+- prove actual Claude/Codex runtime loading;
+- add Docker/container or equivalent fixture smoke;
+- verify no private paths are embedded in generated connectors or initialized data scaffolds.
