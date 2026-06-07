@@ -2,7 +2,7 @@
 
 This document describes the intended two-repository setup.
 
-Current maturity: `scripts/install-connectors.sh` can install source skill symlinks for Codex and agents directories, and `scripts/init-data-repo.sh` can create a minimal private data repo scaffold. Claude source links are available behind an explicit flag, but tool-specific Claude wrappers and actual Claude/Codex runtime loading are not complete yet.
+Current maturity: `scripts/install-connectors.sh` can install source skill symlinks or generated thin wrappers for Codex, agents directories and optional Claude skills. `scripts/init-data-repo.sh` can create a minimal private data repo scaffold. Actual Claude/Codex runtime loading still needs fresh-session validation.
 
 ## Recommended Layout
 
@@ -25,6 +25,21 @@ export HARETRAIL_DATA_DIR="/path/to/haretrail-data"
 The system repo should not hardcode personal paths.
 
 User-local HARE Trail configuration is expected to live outside the public repo, for example under `~/.haretrail/`. Project-local ignored config may be added later for HARE Trail routing, but it must not override the target repository's own coding or documentation rules.
+
+The connector installer can write this local file:
+
+```text
+~/.haretrail/config.env
+```
+
+Example content:
+
+```bash
+HARETRAIL_SYSTEM_DIR=/path/to/haretrail
+HARETRAIL_DATA_DIR=/path/to/haretrail-data
+```
+
+This file is local machine configuration. Do not commit it to the system repo.
 
 ## What Belongs Where
 
@@ -51,21 +66,23 @@ Data repo:
 
 Claude integrations should expose HARE Trail workflows as skills or slash-command wrappers.
 
-Current optional source-link shape:
+Optional source-link shape:
 
 ```text
 ~/.claude/skills/task -> haretrail/skills/task
 ~/.claude/skills/research -> haretrail/skills/research
 ```
 
-Target wrapper shape:
+Generated wrapper shape:
 
 ```text
-~/.claude/skills/task -> haretrail/integrations/claude/skills/task
-~/.claude/skills/research -> haretrail/integrations/claude/skills/research
+~/.claude/skills/task/SKILL.md
+~/.claude/skills/research/SKILL.md
 ```
 
-When working with real notes, Claude should read the data repo instructions and lessons, not the private corpus from the system repo.
+The wrapper is intentionally small. It points Claude to the canonical source skill in `haretrail/skills/<skill>/SKILL.md` and gives the concrete local data repo path from installer config.
+
+When working with real notes, Claude should read the data repo instructions and lessons, not private corpus from the system repo.
 
 Expected data-side files:
 
@@ -78,11 +95,18 @@ haretrail-data/LESSONS.md
 
 Codex integrations should expose skills through the configured Codex skills directory.
 
-Current connector shape:
+Source-link connector shape:
 
 ```text
 ~/.codex/skills/task -> haretrail/skills/task
 ~/.codex/skills/research -> haretrail/skills/research
+```
+
+Generated wrapper shape:
+
+```text
+~/.codex/skills/task/SKILL.md
+~/.codex/skills/research/SKILL.md
 ```
 
 When editing real data, start Codex in the data repo when practical. This keeps writes inside the active workspace and avoids unnecessary permission prompts.
@@ -105,16 +129,29 @@ Dry run first:
 ./scripts/install-connectors.sh --dry-run --data-dir examples/fixture-data-repo
 ```
 
-Install Codex and agents skill links:
+Install Codex and agents source links:
 
 ```bash
 ./scripts/install-connectors.sh --data-dir /path/to/haretrail-data
 ```
 
-Optionally install Claude source links:
+Install generated thin wrappers plus local config:
 
 ```bash
-./scripts/install-connectors.sh --include-claude --data-dir /path/to/haretrail-data
+./scripts/install-connectors.sh \
+  --mode wrapper \
+  --write-config \
+  --data-dir /path/to/haretrail-data
+```
+
+Optionally include Claude wrappers:
+
+```bash
+./scripts/install-connectors.sh \
+  --mode wrapper \
+  --write-config \
+  --include-claude \
+  --data-dir /path/to/haretrail-data
 ```
 
 ## Data Repo Initialization
@@ -147,7 +184,6 @@ The initializer writes missing files only. It creates README, tracker, journal, 
 
 Before calling setup complete:
 
-- add Claude wrappers;
 - prove actual Claude/Codex runtime loading;
 - add Docker/container or equivalent fixture smoke;
 - verify no private paths are embedded in generated connectors or initialized data scaffolds.

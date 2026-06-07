@@ -9,9 +9,9 @@ This file separates what is available now from the target HARE Trail system.
 | System/data boundary | Complete | Reusable system files stay in this repo; private work belongs in a separate data repo. |
 | Public philosophy and goals | Complete | The docs explain the core position, goals and use cases without private history. |
 | Command contracts | Complete | Workflow contracts are documented and reusable skill source folders are present. |
-| Claude/Codex setup contract | Drafted | The intended two-repository setup and permission model are documented. |
+| Claude/Codex setup contract | Drafted | The intended two-repository setup, permission model and wrapper-mode installer are documented. |
 | Skills | Install-tested | Reusable skill source folders are present; source-link installation has been validated from a clean local checkout. |
-| Integrations | Drafted | Source skill links can be installed; actual Claude/Codex runtime loading and tool-specific Claude wrappers are not done. |
+| Integrations | Drafted | Source skill links and generated thin wrappers can be installed; actual Claude/Codex runtime loading is not done. |
 | Templates | Drafted | Reusable templates for core artifact types are present. |
 | Scripts | Drafted | `install-connectors.sh` and `init-data-repo.sh` exist; validators, runtime smoke tests and Docker smoke are not done. |
 | Examples | Drafted | A small fictional data repo fixture is present for future smoke checks. |
@@ -38,7 +38,7 @@ This file separates what is available now from the target HARE Trail system.
 
 ### Phase 4: Add Host Integrations
 
-- Add Claude wrappers.
+- Add generated thin wrappers. Initial installer support is done.
 - Add Codex-compatible skill layout. Initial source-link installer is done.
 - Add connector install scripts. Initial source-link installer is done.
 - Add data repo init script. Initial shell-first script is done.

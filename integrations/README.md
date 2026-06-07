@@ -8,12 +8,12 @@ Available surfaces:
 
 - source skill folders in `skills/`;
 - connector installer in `scripts/install-connectors.sh`;
-- optional Claude source symlinks via installer flag.
+- optional Claude source symlinks via installer flag;
+- generated thin wrappers through `scripts/install-connectors.sh --mode wrapper`.
 
 Planned surfaces:
 
-- Claude skill wrappers;
-- Codex-compatible skill layout;
+- runtime validation for Claude and Codex;
 - setup validation scripts.
 
 Integration rules:
@@ -24,4 +24,6 @@ Integration rules:
 
 ## Current Limitation
 
-`scripts/install-connectors.sh` installs symlinks to reusable source skill folders. It does not yet generate tool-specific Claude wrappers and does not validate a clean checkout end-to-end.
+`scripts/install-connectors.sh` can install symlinks to reusable source skill folders or generated thin wrappers with local `HARETRAIL_DATA_DIR` context.
+
+Actual Claude/Codex runtime loading still needs fresh-session validation.

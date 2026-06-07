@@ -19,8 +19,8 @@ Current maturity:
 
 - reusable source folders are present;
 - hardcoded private paths have been replaced with `{data-repo}`;
-- connector installation is not implemented yet;
-- clean-checkout setup is not validated yet.
+- connector installation supports source links and generated thin wrappers;
+- clean-checkout source-link setup is validated, wrapper-mode runtime loading still needs validation.
 
 ## Data Repo Placeholder
 

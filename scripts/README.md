@@ -6,7 +6,7 @@ Status: Phase 3 migration started.
 
 Available scripts:
 
-- `install-connectors.sh`: install HARE Trail skill symlinks for local agent tools.
+- `install-connectors.sh`: install HARE Trail source links or generated thin wrappers for local agent tools.
 - `init-data-repo.sh`: create a minimal private data repo or initial task scaffold.
 
 Planned scripts:
@@ -23,19 +23,32 @@ Use dry-run first:
 ./scripts/install-connectors.sh --dry-run --data-dir examples/fixture-data-repo
 ```
 
-Install Codex and agents skill links:
+Install Codex and agents source links:
 
 ```bash
 ./scripts/install-connectors.sh --data-dir /path/to/haretrail-data
 ```
 
-Optional Claude source links:
+Install generated thin wrappers and local config:
 
 ```bash
-./scripts/install-connectors.sh --include-claude --data-dir /path/to/haretrail-data
+./scripts/install-connectors.sh \
+  --mode wrapper \
+  --write-config \
+  --data-dir /path/to/haretrail-data
 ```
 
-The Claude path currently links the reusable source skill folders. Tool-specific Claude wrappers are still future work.
+Optional Claude wrappers:
+
+```bash
+./scripts/install-connectors.sh \
+  --mode wrapper \
+  --write-config \
+  --include-claude \
+  --data-dir /path/to/haretrail-data
+```
+
+Wrapper mode writes small local `SKILL.md` files that point to canonical `haretrail/skills/<skill>/SKILL.md` and provide local `HARETRAIL_DATA_DIR` context. It does not copy private data into the system repo.
 
 Scripts should use explicit configuration such as `HARETRAIL_DATA_DIR` when they need access to a data repository.
 

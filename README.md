@@ -25,7 +25,7 @@ It is designed to reduce:
 
 This repository is the reusable **system layer**.
 
-Current maturity: this repository is an early reusable system layer. It includes public docs, reusable skill sources, templates, a source-link connector installer, a data repo initializer and a sanitized fixture data repo. Claude/Codex runtime loading is not fully validated yet.
+Current maturity: this repository is an early reusable system layer. It includes public docs, reusable skill sources, templates, a connector installer with source-link and thin-wrapper modes, a data repo initializer and a sanitized fixture data repo. Claude/Codex runtime loading is not fully validated yet.
 
 The target system layer will contain:
 
@@ -55,7 +55,7 @@ Available now:
 - command contracts;
 - reusable skill source folders for the core workflows;
 - reusable templates for core artifact types;
-- connector installer for source skill symlinks;
+- connector installer for source skill symlinks and generated thin wrappers;
 - data repo initializer for private scaffold creation;
 - Claude/Codex setup contract;
 - analogs comparison;
@@ -65,7 +65,6 @@ Available now:
 Not available yet:
 
 - proven Claude or Codex runtime loading;
-- tool-specific Claude wrappers;
 - Docker/container smoke validation.
 
 ## Recommended Layout
@@ -120,7 +119,7 @@ Phase 1 is complete: the system/data boundary and repository name are frozen.
 
 Phase 2 is complete: the public docs now describe the reusable system without depending on the private research corpus.
 
-Phase 3 is in progress: reusable skill source folders, templates, a sanitized fixture data repo, a source-link installer and a data repo initializer are present. Tool-specific Claude wrappers, runtime loading validation and Docker/container smoke still need to be completed.
+Phase 3 is in progress: reusable skill source folders, templates, a sanitized fixture data repo, a source-link/thin-wrapper installer and a data repo initializer are present. Runtime loading validation and Docker/container smoke still need to be completed.
 
 ## Design Rule
 
