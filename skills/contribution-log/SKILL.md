@@ -9,6 +9,8 @@ description: "Вести и обновлять contribution/self-review logs в 
 
 Перед работой:
 
+- Прочитай `../_shared/system-behavior.md` как общий reusable behavior contract.
+
 - Прочитай `references/workflow.md`.
 - Используй `work-artifacts/README.md` как общую модель контейнера.
 - Не путай contribution log с `debrief`, `lessons` или обычным task execution log.

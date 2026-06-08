@@ -170,6 +170,9 @@ Create a private data repo scaffold:
 
 Create a private data repo scaffold plus an initial research folder:
 
+By default, the scaffold `.gitignore` keeps `work-artifacts/*` out of the parent data repo. Significant task/research folders should use their own local git repositories until the data versioning policy is proven in real use.
+
+
 ```bash
 ./scripts/init-data-repo.sh \
   --target /path/to/haretrail-data \

@@ -1,97 +1,25 @@
 # System Behavior
 
-This document captures reusable HARE Trail behavior that should apply across installations.
+Canonical agent-facing behavior lives in:
 
-Local data repositories may override preferences such as language, paths and project-specific conventions. They should not silently become the only home for rules that improve the reusable system.
+```text
+skills/_shared/system-behavior.md
+```
 
-## Core Principles
+That file is read by HARE Trail skills before their workflow-specific instructions.
 
-- Preserve the path of work, not only final outputs.
-- Keep artifacts human-readable first and agent-readable second.
-- Prefer inspectable files over opaque runtime memory as the source of truth.
-- Record evidence for important claims.
-- Keep source boundaries visible: raw sources, summaries, prompts, decisions and lessons are different layers.
-- Treat debriefs and lessons as tools for calibration and error prevention, not as blame logs.
+This docs page exists for human navigation: system behavior is not just documentation. It is part of the reusable skill contract and should be changed with the same care as workflow files.
 
-## Progressive Disclosure
+## Summary
 
-HARE Trail should make context cheap to re-enter:
+HARE Trail behavior is based on these reusable rules:
 
-1. Read README/status first.
-2. Read tracker/current decisions next.
-3. Read summaries and verification artifacts before raw sources.
-4. Read long journals and raw source packets only when needed.
+- preserve the path of work, not only final outputs;
+- keep artifacts human-readable first and agent-readable second;
+- prefer inspectable files over opaque runtime memory;
+- keep source boundaries visible;
+- verify important claims;
+- treat debriefs and lessons as calibration tools;
+- keep local preferences in data repos, but promote reusable improvements through issue/PR discussion.
 
-This keeps agent context bounded while preserving a full audit trail for humans.
-
-## Artifact Boundaries
-
-Reusable system repository:
-
-- skills;
-- templates;
-- scripts;
-- public docs;
-- sanitized examples;
-- integration contracts.
-
-Private data repository:
-
-- work artifacts;
-- notes;
-- session debriefs;
-- lessons;
-- postmortems;
-- imported sources;
-- user or project overlays.
-
-If a file cannot be published without exposing private work, personal history, company context or local paths, it belongs in the data repository, not in the system repository.
-
-## Writing Rules
-
-- Use the user language or the active project language for working artifacts.
-- If the target project has explicit documentation or language rules, follow the target project.
-- In debriefs, name actors explicitly: for example `Codex`, `Claude Code`, `User`.
-- In mutable documents, anchor relative words such as `current`, `new`, `recent` and `latest` with dates when the meaning can drift.
-- For imported materials, distinguish source date, source period and import/export date.
-- Avoid treating implementation compromises as identity labels. File-first markdown is the current primary layer, not the whole philosophy.
-
-## Verification Behavior
-
-- Verify real behavior, not only exit codes.
-- Treat plausible claims as hypotheses until verified or attributed.
-- When the user asks a question, answer with alternatives unless they clearly asked for implementation.
-- Before destructive filesystem changes, verify both data safety and runtime safety.
-- Data safety means backup, checksum, restore or sync evidence.
-- Runtime safety means current sessions, working directories, config, skill discovery and symlink targets will not be broken by the operation.
-
-## Lessons And Debriefs
-
-Lessons should be:
-
-- evidence-backed;
-- scoped to where they apply;
-- linked to source debriefs or verification artifacts;
-- concise enough to be useful at session start.
-
-Debriefs should preserve:
-
-- false hypotheses;
-- participant-specific mistakes;
-- user corrections;
-- verified root cause;
-- what changed in future behavior.
-
-## Local-To-System Escalation
-
-When a user or agent changes a local data-repo rule, decide whether it is:
-
-- local preference: keep it in the data repository;
-- reusable best practice: prepare a system-repo change;
-- uncertain design decision: create an issue/discussion prompt before changing the public system.
-
-Agents should not silently bury reusable improvements in private local config. They should ask whether to keep the rule local, open an issue, or prepare a pull request.
-
-## Future Runtime Layers
-
-Search, embeddings, MCP, graph projections and runtime memory can be added later. They should remain layers over inspectable artifacts, not replacements for the human-readable source of truth.
+See `skills/_shared/system-behavior.md` for the full contract.

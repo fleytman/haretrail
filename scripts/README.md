@@ -76,4 +76,4 @@ Create a data repo plus an initial task folder:
   --task-kind research
 ```
 
-The script creates missing files and keeps existing files. It does not copy private corpus, does not write to real home directories and does not initialize Windows-specific support yet.
+The script creates missing files and keeps existing files. It does not copy private corpus, does not write to real home directories and does not initialize Windows-specific support yet. If `--git-init` is used, `work-artifacts/*` remains ignored by the parent data repo so task folders can be standalone repositories.

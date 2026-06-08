@@ -9,6 +9,8 @@ description: "Создавать и обновлять тяжёлые incident-g
 
 Перед работой:
 
+- Прочитай `../_shared/system-behavior.md` как общий reusable behavior contract.
+
 - Прочитай `references/workflow.md`.
 - Используй `postmortems/README.md` как source of truth.
 - Не путай postmortem с обычным `debrief`.

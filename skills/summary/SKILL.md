@@ -9,6 +9,8 @@ description: "Обрабатывать пакет документов или ф
 
 Перед работой:
 
+- Прочитай `../_shared/system-behavior.md` как общий reusable behavior contract.
+
 - Прочитай `references/workflow.md` и следуй ему как source of truth.
 - Считай каноническими только пути в `{data-repo}`, а не `.claude` или `.codex`.
 - По умолчанию summary-артефакты пиши по-русски, если пользователь не попросил другой язык.

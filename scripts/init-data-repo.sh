@@ -364,6 +364,12 @@ write_file "$target/.gitignore" <<'EOF'
 .codex/
 .claude/
 .agents/
+
+# Work artifacts own their lifecycle. Significant artifacts should be
+# standalone git repos; parent data git tracks durable memory/control layers.
+work-artifacts/*
+!work-artifacts/README.md
+!work-artifacts/.gitkeep
 EOF
 
 if [[ -n "$initial_task" ]]; then

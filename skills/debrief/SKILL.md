@@ -8,6 +8,8 @@ description: "Читать, создавать и обновлять session deb
 Этот skill обслуживает каноническую систему session debriefs в `{data-repo}`.
 
 Перед работой:
+
+- Прочитай `../_shared/system-behavior.md` как общий reusable behavior contract.
 - Прочитай `references/workflow.md` и следуй ему как source of truth.
 - Считай каноническими только пути в `{data-repo}`, а не в `.claude` или `.codex`.
 - Пиши по-русски.

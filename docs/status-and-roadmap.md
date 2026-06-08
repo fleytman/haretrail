@@ -60,6 +60,8 @@ Goal: make lessons and debriefs rollback-able without breaking task repos.
 - Avoid submodules by default unless a task artifact is intentionally published/shared.
 - Add scripts or docs for checking nested repo status before commits.
 
+Known limitation: ignoring `work-artifacts/` protects nested task repos, but plain non-git task folders are not tracked by the parent data repo. This is acceptable for the first demo only if significant task/research artifacts get their own local git repos. Revisit this after real usage before promoting the policy as stable.
+
 ### 3. Session-Start Retrieval
 
 Goal: load the right lessons without flooding context.

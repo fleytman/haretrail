@@ -9,6 +9,8 @@ description: "Создавать, находить и обновлять task-fo
 
 Перед работой:
 
+- Прочитай `../_shared/system-behavior.md` как общий reusable behavior contract.
+
 - Прочитай `references/workflow.md`.
 - Используй `work-artifacts/README.md` как общую модель task-folder.
 - По умолчанию task-folder создаётся или обновляется в `{data-repo}/work-artifacts/`.
