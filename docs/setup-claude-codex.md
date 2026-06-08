@@ -2,7 +2,7 @@
 
 This document describes the intended two-repository setup.
 
-Current maturity: `scripts/install-connectors.sh` can install source skill symlinks or generated thin wrappers for Codex, agents directories and optional Claude skills. `scripts/init-data-repo.sh` can create a minimal private data repo scaffold. Actual Claude/Codex runtime loading still needs fresh-session validation.
+Current maturity: `scripts/install-connectors.sh` can install source skill symlinks or generated thin wrappers for Codex, optional agents directories and optional Claude skills. `scripts/init-data-repo.sh` can create a minimal private data repo scaffold. Actual Claude/Codex runtime loading still needs fresh-session validation.
 
 ## Recommended Layout
 
@@ -129,7 +129,7 @@ Dry run first:
 ./scripts/install-connectors.sh --dry-run --data-dir examples/fixture-data-repo
 ```
 
-Install Codex and agents source links:
+Install Codex source links:
 
 ```bash
 ./scripts/install-connectors.sh --data-dir /path/to/haretrail-data
@@ -151,6 +151,16 @@ Optionally include Claude wrappers:
   --mode wrapper \
   --write-config \
   --include-claude \
+  --data-dir /path/to/haretrail-data
+```
+
+Optionally include agents wrappers only when the target tool requires `~/.agents/skills` and does not also scan `~/.codex/skills`:
+
+```bash
+./scripts/install-connectors.sh \
+  --mode wrapper \
+  --write-config \
+  --include-agents \
   --data-dir /path/to/haretrail-data
 ```
 

@@ -14,6 +14,7 @@ config_file=""
 
 dry_run=0
 include_claude=0
+include_agents=0
 install_mode="source"
 write_config=0
 
@@ -34,6 +35,7 @@ Usage: install-connectors.sh [options]
 
 Options:
   --dry-run             Print planned changes without writing files.
+  --include-agents      Also install into ~/.agents/skills. Off by default because some tools also scan this root and may show duplicate skills.
   --include-claude      Also link source skill folders into ~/.claude/skills.
   --mode MODE           Connector mode: source or wrapper. Default: source.
   --write-config        Write local config.env under ~/.haretrail or --config-dir.
@@ -60,6 +62,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --include-claude)
       include_claude=1
+      shift
+      ;;
+    --include-agents)
+      include_agents=1
       shift
       ;;
     --mode)
@@ -320,17 +326,29 @@ if [[ "$write_config" -eq 1 ]]; then
   write_local_config
 fi
 
-run mkdir -p "$codex_home/skills" "$agents_home/skills"
+run mkdir -p "$codex_home/skills"
 
 for skill in "${skills[@]}"; do
   if [[ "$install_mode" == "wrapper" ]]; then
     install_wrapper "$skill" "$codex_home/skills/$skill"
-    install_wrapper "$skill" "$agents_home/skills/$skill"
   else
     link_path "$repo_root/skills/$skill" "$codex_home/skills/$skill"
-    link_path "$repo_root/skills/$skill" "$agents_home/skills/$skill"
   fi
 done
+
+if [[ "$include_agents" -eq 1 ]]; then
+  run mkdir -p "$agents_home/skills"
+  for skill in "${skills[@]}"; do
+    if [[ "$install_mode" == "wrapper" ]]; then
+      install_wrapper "$skill" "$agents_home/skills/$skill"
+    else
+      link_path "$repo_root/skills/$skill" "$agents_home/skills/$skill"
+    fi
+  done
+  note "Agents connectors installed in $install_mode mode."
+else
+  note "Skipped agents connectors. Use --include-agents only when the target tool requires ~/.agents/skills and does not also scan ~/.codex/skills."
+fi
 
 if [[ "$include_claude" -eq 1 ]]; then
   run mkdir -p "$claude_home/skills"

@@ -23,7 +23,7 @@ Use dry-run first:
 ./scripts/install-connectors.sh --dry-run --data-dir examples/fixture-data-repo
 ```
 
-Install Codex and agents source links:
+Install Codex source links:
 
 ```bash
 ./scripts/install-connectors.sh --data-dir /path/to/haretrail-data
@@ -45,6 +45,16 @@ Optional Claude wrappers:
   --mode wrapper \
   --write-config \
   --include-claude \
+  --data-dir /path/to/haretrail-data
+```
+
+Optional agents wrappers, only when the target tool requires `~/.agents/skills` and does not also scan `~/.codex/skills`:
+
+```bash
+./scripts/install-connectors.sh \
+  --mode wrapper \
+  --write-config \
+  --include-agents \
   --data-dir /path/to/haretrail-data
 ```
 
