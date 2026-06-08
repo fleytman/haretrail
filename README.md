@@ -34,6 +34,7 @@ The target system layer will contain:
 - templates;
 - setup documentation for Claude and Codex;
 - public philosophy and use-case docs;
+- reusable system behavior docs;
 - sanitized examples and fixtures.
 
 It should not contain:
@@ -108,6 +109,7 @@ See [Commands](docs/commands.md).
 
 - [Philosophy](docs/philosophy.md)
 - [Goals and Use Cases](docs/goals-and-use-cases.md)
+- [System Behavior](docs/system-behavior.md)
 - [Commands](docs/commands.md)
 - [Claude and Codex Setup](docs/setup-claude-codex.md)
 - [Analogs Comparison](docs/compare-analogs.md)

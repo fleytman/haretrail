@@ -49,3 +49,7 @@ When editing real user data, prefer running the agent from the data repository i
 ## Documentation Style
 
 Keep docs compact, direct and reusable. Explain the workflow contract and failure modes, not private history.
+
+## Local-To-System Escalation
+
+When a rule discovered in a private data repository looks reusable, do not silently leave it only in local config. Ask whether it should stay local, become an issue/discussion, or be prepared as a pull request to this system repository.
