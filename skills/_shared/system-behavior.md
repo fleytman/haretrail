@@ -65,6 +65,14 @@ If a file cannot be published without exposing private work, personal history, c
 - Data safety means backup, checksum, restore or sync evidence.
 - Runtime safety means current sessions, working directories, config, skill discovery and symlink targets will not be broken by the operation.
 
+## Git Hygiene For Work Artifacts
+
+- `work-artifacts/*` may be standalone git repositories.
+- When creating or editing files inside a work-artifact that is a git repository, stage files that clearly belong to the current change with `git add` before reporting the work as complete.
+- Do not stage unrelated user changes, generated noise, ignored files or files whose relation to the current change is unclear.
+- If a new significant work-artifact is created as a git repository, set or verify the repository-local git identity before the first commit when local policy requires it.
+- If staging is blocked by permissions or tool sandboxing, report that clearly and retry with the normal permission-escalation flow when appropriate.
+
 ## Lessons And Debriefs
 
 Lessons should be:

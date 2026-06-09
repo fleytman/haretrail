@@ -41,6 +41,7 @@ Default placement:
 - Если пользователь явно просит создать artifact в текущем workspace/repo, использовать указанное место и зафиксировать это в `README.md`.
 - Если research folder создан в `{data-repo}` из контекста внешнего рабочего repo и к нему вероятно будут возвращаться в следующих сессиях, предложить пользователю создать `ln -s` в текущем repo для удобного доступа. Не создавать symlink молча.
 - Новый значимый research artifact должен быть local git repo по умолчанию, если он не tiny/throwaway. Если repo author identity неоднозначна, спросить пользователя или применить local data config.
+- Если research folder является git repo, новые файлы, явно относящиеся к текущему исследованию, нужно добавить в index (`git add <files>`) до завершения работы; unrelated user changes не stage-ить.
 
 ## 1. Собрать контекст
 
