@@ -9,7 +9,8 @@ Available surfaces:
 - source skill folders in `skills/`;
 - connector installer in `scripts/install-connectors.sh`;
 - optional Claude source symlinks via installer flag;
-- generated thin wrappers through `scripts/install-connectors.sh --mode wrapper`.
+- generated thin wrappers through `scripts/install-connectors.sh --mode wrapper`;
+- generated Kiro CLI agent config through `scripts/install-connectors.sh --include-kiro` (see `kiro/README.md`).
 
 Planned surfaces:
 
@@ -24,6 +25,6 @@ Integration rules:
 
 ## Current Limitation
 
-`scripts/install-connectors.sh` can install symlinks to reusable source skill folders or generated thin wrappers with local `HARETRAIL_DATA_DIR` context.
+`scripts/install-connectors.sh` can install symlinks to reusable source skill folders, generated thin wrappers with local `HARETRAIL_DATA_DIR` context, or a generated Kiro CLI agent config.
 
-Actual Claude/Codex runtime loading still needs fresh-session validation.
+Actual Claude, Codex and Kiro runtime loading still needs fresh-session validation.

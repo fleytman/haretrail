@@ -8,6 +8,7 @@ timestamp="$(date +%Y%m%d%H%M%S)"
 codex_home="${CODEX_HOME:-$HOME/.codex}"
 agents_home="${AGENTS_HOME:-$HOME/.agents}"
 claude_home="${CLAUDE_HOME:-$HOME/.claude}"
+kiro_home="${KIRO_HOME:-$HOME/.kiro}"
 data_dir="${HARETRAIL_DATA_DIR:-}"
 config_dir="${HARETRAIL_CONFIG_DIR:-$HOME/.haretrail}"
 config_file=""
@@ -15,6 +16,7 @@ config_file=""
 dry_run=0
 include_claude=0
 include_agents=0
+include_kiro=0
 install_mode="source"
 write_config=0
 
@@ -37,6 +39,7 @@ Options:
   --dry-run             Print planned changes without writing files.
   --include-agents      Also install into ~/.agents/skills. Off by default because some tools also scan this root and may show duplicate skills.
   --include-claude      Also link source skill folders into ~/.claude/skills.
+  --include-kiro        Also generate a HARE Trail agent config for Kiro CLI under ~/.kiro/agents. Requires --data-dir.
   --mode MODE           Connector mode: source or wrapper. Default: source.
   --write-config        Write local config.env under ~/.haretrail or --config-dir.
   --data-dir PATH       Data repo root. Overrides HARETRAIL_DATA_DIR for validation output.
@@ -44,11 +47,13 @@ Options:
   --codex-home PATH     Codex home directory. Default: $CODEX_HOME or ~/.codex.
   --agents-home PATH    Agents home directory. Default: $AGENTS_HOME or ~/.agents.
   --claude-home PATH    Claude home directory. Default: $CLAUDE_HOME or ~/.claude.
+  --kiro-home PATH      Kiro home directory. Default: $KIRO_HOME or ~/.kiro.
   -h, --help            Show this help.
 
 Notes:
   - This script installs symlinks to reusable source skill folders.
   - Wrapper mode installs small local SKILL.md files that point to canonical source skills.
+  - Kiro support generates ~/.kiro/agents/haretrail.json referencing canonical source skills via skill:// and the data repo via file://.
   - It does not copy private data and does not write inside the data repo.
   - Claude source links or wrappers are installed only with --include-claude.
 USAGE
@@ -66,6 +71,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --include-agents)
       include_agents=1
+      shift
+      ;;
+    --include-kiro)
+      include_kiro=1
       shift
       ;;
     --mode)
@@ -94,6 +103,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --claude-home)
       claude_home="${2:-}"
+      shift 2
+      ;;
+    --kiro-home)
+      kiro_home="${2:-}"
       shift 2
       ;;
     -h|--help)
@@ -269,6 +282,61 @@ Before acting:
   note "Generated wrapper $target -> $source"
 }
 
+install_kiro_agent() {
+  local agents_dir="$kiro_home/agents"
+  local agent_file="$agents_dir/haretrail.json"
+
+  run mkdir -p "$agents_dir"
+
+  # Back up a foreign agent file so we never silently overwrite a user's own config.
+  # Our generated files are self-identified by a marker string in the description.
+  if [[ "$dry_run" -eq 0 && -e "$agent_file" ]]; then
+    if ! grep -q 'generated-by=haretrail-install-connectors' "$agent_file" 2>/dev/null; then
+      local backup_path="${agent_file}.bak.${timestamp}"
+      mv "$agent_file" "$backup_path"
+      note "Backed up $agent_file -> $backup_path"
+    fi
+  fi
+
+  # Build the resources array: skills load on demand (skill://), shared behavior
+  # and data-repo rules are always in context (file://). LESSONS.md is intentionally
+  # not force-loaded; it is read on demand through the lessons skill.
+  local res_json="" first=1 skill
+  for skill in "${skills[@]}"; do
+    if [[ "$first" -eq 1 ]]; then first=0; else res_json+=$',\n'; fi
+    res_json+="    \"skill://$repo_root/skills/$skill/SKILL.md\""
+  done
+  res_json+=$',\n'"    \"file://$repo_root/skills/_shared/system-behavior.md\""
+  if [[ -f "$data_dir/AGENTS.md" ]]; then
+    res_json+=$',\n'"    \"file://$data_dir/AGENTS.md\""
+  fi
+  if [[ -f "$data_dir/BASE.md" ]]; then
+    res_json+=$',\n'"    \"file://$data_dir/BASE.md\""
+  fi
+
+  # Single-line prompt: no double quotes or backslashes so it is safe inside JSON.
+  local prompt="You are the HARE Trail working agent. HARE Trail is a file-first work and research system that preserves the whole path of work (sources, questions, attempts, evidence, debriefs and lessons), not only final outputs. Reusable system repo: $repo_root. Private data repo: $data_dir. Resolve any {data-repo} placeholder to $data_dir. Before acting, read your loaded resources: the reusable behavior contract system-behavior.md, the SKILL for the requested workflow (task, summary, research, doc-write, debrief, lessons, postmortem, contribution-log), and the data repo AGENTS.md and BASE.md. Follow progressive disclosure: read README and tracker before long journals and raw sources. Keep private artifacts in the data repo and never copy them into the system repo. When editing files inside an external project repo, follow that project rules and language. Default working language for this user artifacts is Russian unless a target project requires otherwise."
+
+  local content
+  content="$(cat <<JSON
+{
+  "name": "haretrail",
+  "description": "HARE Trail working agent (generated-by=haretrail-install-connectors). System repo: $repo_root. Data repo: $data_dir.",
+  "prompt": "$prompt",
+  "tools": ["read", "write", "shell", "grep", "glob", "code"],
+  "allowedTools": ["read", "grep", "glob"],
+  "resources": [
+$res_json
+  ]
+}
+JSON
+)"
+
+  write_file "$agent_file" "$content"
+  note "Generated Kiro agent $agent_file"
+  note "Run it with: kiro-cli chat --agent haretrail"
+}
+
 write_local_config() {
   run mkdir -p "$config_dir"
 
@@ -317,6 +385,11 @@ if [[ "$install_mode" == "wrapper" && -z "$data_dir" ]]; then
   exit 2
 fi
 
+if [[ "$include_kiro" -eq 1 && -z "$data_dir" ]]; then
+  printf 'The --include-kiro option requires --data-dir or HARETRAIL_DATA_DIR.\n' >&2
+  exit 2
+fi
+
 if [[ "$write_config" -eq 1 && -z "$data_dir" ]]; then
   printf '%s\n' '--write-config requires --data-dir or HARETRAIL_DATA_DIR.' >&2
   exit 2
@@ -362,6 +435,13 @@ if [[ "$include_claude" -eq 1 ]]; then
   note "Claude connectors installed in $install_mode mode."
 else
   note "Skipped Claude connectors. Use --include-claude to install them explicitly."
+fi
+
+if [[ "$include_kiro" -eq 1 ]]; then
+  install_kiro_agent
+  note "Kiro agent connector installed."
+else
+  note "Skipped Kiro connector. Use --include-kiro to generate the ~/.kiro agent config."
 fi
 
 note "Installed HARE Trail connectors from $repo_root in $install_mode mode."

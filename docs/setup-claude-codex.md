@@ -111,6 +111,44 @@ Generated wrapper shape:
 
 When editing real data, start Codex in the data repo when practical. This keeps writes inside the active workspace and avoids unnecessary permission prompts.
 
+## Kiro CLI
+
+Kiro CLI does not auto-scan a skills directory. It loads skills and context through agent configuration, so the HARE Trail connector for Kiro is a generated agent config rather than a skills symlink.
+
+Generated shape:
+
+```text
+~/.kiro/agents/haretrail.json
+```
+
+The agent references the canonical source skills and the data repo:
+
+- `skill://<system-repo>/skills/<skill>/SKILL.md` for each workflow skill (metadata at startup, full content on demand);
+- `file://<system-repo>/skills/_shared/system-behavior.md` for the reusable behavior contract;
+- `file://<data-repo>/AGENTS.md` and `file://<data-repo>/BASE.md` for local rules.
+
+`LESSONS.md` is intentionally not force-loaded; it is read on demand through the `lessons` skill.
+
+Install it:
+
+```bash
+./scripts/install-connectors.sh \
+  --include-kiro \
+  --write-config \
+  --data-dir /path/to/haretrail-data
+```
+
+Validate and run:
+
+```bash
+kiro-cli agent validate --path ~/.kiro/agents/haretrail.json
+kiro-cli chat --agent haretrail
+```
+
+The generated agent file is self-identified by a marker in its `description`. A re-run overwrites a HARE Trail agent in place but backs up any foreign `haretrail.json` first.
+
+An optional alternative is a global steering file at `~/.kiro/steering/haretrail.md`, which the built-in default agent loads automatically. Steering content is always in context, so keep it small. See `integrations/kiro/README.md`.
+
 ## Permission Model
 
 Agents often need permission to write outside the current working directory. HARE Trail should reduce that friction by design:
@@ -151,6 +189,15 @@ Optionally include Claude wrappers:
   --mode wrapper \
   --write-config \
   --include-claude \
+  --data-dir /path/to/haretrail-data
+```
+
+Optionally generate the Kiro CLI agent config:
+
+```bash
+./scripts/install-connectors.sh \
+  --include-kiro \
+  --write-config \
   --data-dir /path/to/haretrail-data
 ```
 

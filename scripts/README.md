@@ -48,6 +48,17 @@ Optional Claude wrappers:
   --data-dir /path/to/haretrail-data
 ```
 
+Optional Kiro CLI agent config (Kiro loads skills through an agent config, not a skills directory):
+
+```bash
+./scripts/install-connectors.sh \
+  --include-kiro \
+  --write-config \
+  --data-dir /path/to/haretrail-data
+```
+
+This generates `~/.kiro/agents/haretrail.json` referencing canonical source skills via `skill://` and the data repo via `file://`. See `integrations/kiro/README.md`.
+
 Optional agents wrappers, only when the target tool requires `~/.agents/skills` and does not also scan `~/.codex/skills`:
 
 ```bash
