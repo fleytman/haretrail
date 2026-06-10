@@ -126,3 +126,27 @@ Phase 3 is in progress: reusable skill source folders, templates, a sanitized fi
 ## Design Rule
 
 If a file cannot be published without exposing private work, personal history, company context or local paths, it does not belong in this repository. Extract the reusable rule, template or workflow instead.
+
+## License
+
+HARE Trail is source-available, **not** OSI open source.
+
+It is licensed under the **Functional Source License, Version 1.1, MIT Future
+License (FSL-1.1-MIT)** — see [LICENSE](LICENSE). In short:
+
+- internal use, noncommercial education and noncommercial research are broadly permitted;
+- a **Competing Use** — a commercial product or service that substitutes for or offers substantially similar functionality to HARE Trail — is **not** permitted;
+- each version **converts to the MIT license two years after its release**.
+
+Please credit the project when you use or build on it — see [NOTICE](NOTICE) for
+the requested attribution (author, repository link and contact). Commercial use
+beyond the license requires a separate agreement (contact m.fleytman@gmail.com).
+
+## Contributing
+
+Contributions are welcome. By contributing you agree to the
+[Contributor License Agreement](CLA.md), which lets the project keep its
+licensing consistent and offer commercial licenses. To sign, comment on your
+pull request:
+
+> I have read the CLA Document and I hereby sign the CLA

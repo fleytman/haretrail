@@ -1,0 +1,40 @@
+HARE Trail
+Copyright 2026 Mikhail Fleytman
+
+This repository is licensed under the Functional Source License, Version 1.1,
+MIT Future License (FSL-1.1-MIT). See the LICENSE file for the full terms.
+
+This is source-available, not OSI open source: noncommercial and internal use
+is broadly permitted, but a Competing Use (a commercial product or service that
+substitutes for or offers substantially similar functionality to HARE Trail)
+is not. Each version converts to the MIT license two years after its release.
+
+
+ATTRIBUTION
+
+While a version is under the Functional Source License (i.e. before its
+two-year conversion to MIT), you must retain this notice, keep the copyright
+notices, and identify HARE Trail as the origin of the Software when you use,
+redistribute, fork or build upon it (see the License's Redistribution and
+Trademark terms).
+
+When using, redistributing, forking, demoing, presenting, or publishing a
+product page based on this repository, please display the following in a place
+accessible to users (for example: an About screen, README, footer, credits, or
+documentation):
+
+    HARE Trail by Mikhail Fleytman
+    Repository: https://github.com/fleytman/haretrail
+    Contact: m.fleytman@gmail.com
+    LinkedIn: https://www.linkedin.com/in/fleytman/
+
+After a version converts to the MIT license (two years after its release), the
+attribution above is no longer a legal requirement, but it remains a kind
+request. Please keep crediting HARE Trail and linking the repository — it helps
+the project and its community.
+
+
+COMMERCIAL USE
+
+A Competing Use, or any use beyond what the Functional Source License permits,
+requires a separate written agreement. Contact m.fleytman@gmail.com.
