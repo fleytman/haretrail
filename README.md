@@ -25,7 +25,7 @@ It is designed to reduce:
 
 This repository is the reusable **system layer**.
 
-Current maturity: this repository is an early reusable system layer. It includes public docs, reusable skill sources, templates, a connector installer with source-link and thin-wrapper modes, a data repo initializer and a sanitized fixture data repo. Claude/Codex runtime loading is not fully validated yet.
+Current maturity: this repository is an early reusable system layer. It includes public docs, reusable skill sources, templates, a connector installer with source-link and thin-wrapper modes, a data repo initializer and a sanitized fixture data repo. A clean-checkout install has not been fully tested end to end yet, and Claude/Codex runtime loading is not fully validated.
 
 The target system layer will contain:
 
@@ -65,6 +65,7 @@ Available now:
 
 Not available yet:
 
+- a validated clean-checkout install path;
 - proven Claude or Codex runtime loading;
 - Docker/container smoke validation.
 
@@ -122,6 +123,16 @@ Phase 1 is complete: the system/data boundary and repository name are frozen.
 Phase 2 is complete: the public docs now describe the reusable system without depending on the private research corpus.
 
 Phase 3 is in progress: reusable skill source folders, templates, a sanitized fixture data repo, a source-link/thin-wrapper installer and a data repo initializer are present. Runtime loading validation and Docker/container smoke still need to be completed.
+
+This is an initial public release. A clean-checkout install has not been fully tested end to end, so treat first-time setup as experimental.
+
+The following items are intentionally not done yet. They stay on the list as not done, but they are now the first steps after this release rather than blockers before it:
+
+- validate a clean-checkout install path from scratch;
+- prove Claude/Codex runtime loading from fresh sessions;
+- add Docker/container smoke validation;
+- run at least one fixture-only workflow smoke;
+- confirm duplicate skill discovery behavior for Codex and Claude.
 
 ## Design Rule
 
