@@ -141,6 +141,10 @@ done
 
 config_file="$config_dir/config.env"
 
+# Preserved backups live OUTSIDE any scanned skill root so host tools (Codex /
+# Claude skill discovery) never index a stale ".bak" copy as a live skill.
+backup_root="$config_dir/connector-backups/$timestamp"
+
 if [[ "$install_mode" != "source" && "$install_mode" != "wrapper" ]]; then
   printf 'Invalid --mode: %s\nExpected: source or wrapper\n' "$install_mode" >&2
   exit 2
@@ -188,13 +192,44 @@ require_source_skill() {
   fi
 }
 
+# Move a path into the external backup root, preserving it but taking it out of
+# any scanned skill directory. The absolute path is mirrored under backup_root
+# to avoid collisions (e.g. codex vs claude both have "research") and to keep
+# restores obvious.
+stash_backup() {
+  local path="$1"
+  local dest="$backup_root$path"
+
+  if [[ "$dry_run" -eq 1 ]]; then
+    printf '[dry-run] mv %q %q\n' "$path" "$dest"
+    note "Would back up $path -> $dest"
+    return
+  fi
+
+  mkdir -p "$(dirname -- "$dest")"
+  mv "$path" "$dest"
+  note "Backed up $path -> $dest"
+}
+
+# Sweep stale "<name>.bak.<ts>" siblings left in a skill dir by older versions
+# of this script into the external backup root, so they stop showing up as
+# duplicate skills. Backups are kept, just relocated.
+relocate_legacy_backups() {
+  local dir="$1"
+  [[ -d "$dir" ]] || return 0
+
+  local b
+  for b in "$dir"/*.bak.*; do
+    [[ -e "$b" ]] || continue
+    stash_backup "$b"
+  done
+}
+
 backup_if_needed() {
   local path="$1"
 
   if [[ -e "$path" && ! -L "$path" ]]; then
-    local backup_path="${path}.bak.${timestamp}"
-    run mv "$path" "$backup_path"
-    note "Backed up $path -> $backup_path"
+    stash_backup "$path"
   fi
 }
 
@@ -213,9 +248,7 @@ prepare_wrapper_dir() {
   if [[ -L "$target" ]]; then
     run rm "$target"
   elif [[ -e "$target" && ! -f "$target/.haretrail-wrapper" ]]; then
-    local backup_path="${target}.bak.${timestamp}"
-    run mv "$target" "$backup_path"
-    note "Backed up $target -> $backup_path"
+    stash_backup "$target"
   fi
 
   run mkdir -p "$target"
@@ -344,9 +377,7 @@ install_kiro_agent() {
   # Our generated files are self-identified by a marker string in the description.
   if [[ "$dry_run" -eq 0 && -e "$agent_file" ]]; then
     if ! grep -q 'generated-by=haretrail-install-connectors' "$agent_file" 2>/dev/null; then
-      local backup_path="${agent_file}.bak.${timestamp}"
-      mv "$agent_file" "$backup_path"
-      note "Backed up $agent_file -> $backup_path"
+      stash_backup "$agent_file"
     fi
   fi
 
@@ -367,7 +398,7 @@ install_kiro_agent() {
   fi
 
   # Single-line prompt: no double quotes or backslashes so it is safe inside JSON.
-  local prompt="You are the HARE Trail working agent. HARE Trail is a file-first work and research system that preserves the whole path of work (sources, questions, attempts, evidence, debriefs and lessons), not only final outputs. Reusable system repo: $repo_root. Private data repo: $data_dir. Resolve any {data-repo} placeholder to $data_dir. Before acting, read your loaded resources: the reusable behavior contract system-behavior.md, the SKILL for the requested workflow (task, summary, research, doc-write, debrief, lessons, postmortem, contribution-log), and the data repo AGENTS.md and BASE.md. Follow progressive disclosure: read README and tracker before long journals and raw sources. Keep private artifacts in the data repo and never copy them into the system repo. When editing files inside an external project repo, follow that project rules and language. Default working language for this user artifacts is Russian unless a target project requires otherwise."
+  local prompt="You are the HARE Trail working agent. HARE Trail is a file-first work and research system that preserves the whole path of work (sources, questions, attempts, evidence, debriefs and lessons), not only final outputs. Reusable system repo: $repo_root. Private data repo: $data_dir. Resolve any {data-repo} placeholder to $data_dir. Before acting, read your loaded resources: the reusable behavior contract system-behavior.md, the SKILL for the requested workflow (task, summary, research, doc-write, debrief, lessons, postmortem, contribution-log), and the data repo AGENTS.md and BASE.md. Follow progressive disclosure: read README and tracker before long journals and raw sources. Keep private artifacts in the data repo and never copy them into the system repo. When editing files inside an external project repo, follow that project rules and language. Write working artifacts in the language configured as HARETRAIL_ARTIFACT_LANG in the local config (~/.haretrail/config.env); if unset, fall back to the language of the current user/dialogue. Do not hardcode a specific language."
 
   local content
   content="$(cat <<JSON
@@ -400,9 +431,7 @@ install_kiro_ide() {
   # Back up foreign steering file if it exists and is not ours.
   if [[ "$dry_run" -eq 0 && -e "$steering_file" ]]; then
     if ! grep -q 'generated-by=haretrail-install-connectors' "$steering_file" 2>/dev/null; then
-      local backup_path="${steering_file}.bak.${timestamp}"
-      mv "$steering_file" "$backup_path"
-      note "Backed up $steering_file -> $backup_path"
+      stash_backup "$steering_file"
     fi
   fi
 
@@ -453,7 +482,7 @@ Resolve any \`{data-repo}\` placeholder to \`$data_dir\`.
 - Follow progressive disclosure: README/tracker first, then summaries/verification, then long journals/raw sources.
 - Keep private artifacts in the data repo. Never copy them into the system repo.
 - When editing files in an external project repo, follow that project's rules and language.
-- Default working language for user artifacts: Russian (unless a target project requires otherwise).
+- Write working artifacts in the language configured as \`HARETRAIL_ARTIFACT_LANG\` in the local config (\`~/.haretrail/config.env\`); if unset, fall back to the language of the current user/dialogue. Do not hardcode a specific language.
 
 ## Skill Dispatch
 
@@ -480,9 +509,7 @@ $data_rules"
     # Back up foreign SKILL.md if needed.
     if [[ "$dry_run" -eq 0 && -e "$skill_md" ]]; then
       if ! grep -q 'generated-by=haretrail-install-connectors' "$skill_md" 2>/dev/null; then
-        local backup_path="${skill_md}.bak.${timestamp}"
-        mv "$skill_md" "$backup_path"
-        note "Backed up $skill_md -> $backup_path"
+        stash_backup "$skill_md"
       fi
     fi
 
@@ -521,9 +548,7 @@ Data repo rules: \`$data_dir/AGENTS.md\`, \`$data_dir/BASE.md\`
 
   if [[ "$dry_run" -eq 0 && -e "$workspace_file" ]]; then
     if ! grep -q 'generated-by=haretrail-install-connectors' "$workspace_file" 2>/dev/null; then
-      local backup_path="${workspace_file}.bak.${timestamp}"
-      mv "$workspace_file" "$backup_path"
-      note "Backed up $workspace_file -> $backup_path"
+      stash_backup "$workspace_file"
     fi
   fi
 
@@ -561,9 +586,7 @@ write_local_config() {
   run mkdir -p "$config_dir"
 
   if [[ -e "$config_file" && ! -f "$config_file" ]]; then
-    local backup_path="${config_file}.bak.${timestamp}"
-    run mv "$config_file" "$backup_path"
-    note "Backed up $config_file -> $backup_path"
+    stash_backup "$config_file"
   fi
 
   write_file "$config_file" "# HARE Trail local config
@@ -625,6 +648,7 @@ if [[ "$write_config" -eq 1 ]]; then
 fi
 
 run mkdir -p "$codex_home/skills"
+relocate_legacy_backups "$codex_home/skills"
 
 for skill in "${skills[@]}"; do
   if [[ "$install_mode" == "wrapper" ]]; then
@@ -636,6 +660,7 @@ done
 
 if [[ "$include_agents" -eq 1 ]]; then
   run mkdir -p "$agents_home/skills"
+  relocate_legacy_backups "$agents_home/skills"
   for skill in "${skills[@]}"; do
     if [[ "$install_mode" == "wrapper" ]]; then
       install_wrapper "$skill" "$agents_home/skills/$skill"
@@ -650,6 +675,7 @@ fi
 
 if [[ "$include_claude" -eq 1 ]]; then
   run mkdir -p "$claude_home/skills"
+  relocate_legacy_backups "$claude_home/skills"
   for skill in "${skills[@]}"; do
     if [[ "$install_mode" == "wrapper" ]]; then
       install_wrapper "$skill" "$claude_home/skills/$skill"
