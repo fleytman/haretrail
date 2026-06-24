@@ -1,84 +1,91 @@
 # HARE Trail
 
-**HARE Trail** is a **Human-Agent Reasoning Environment with Traceable Research Artifacts for Inquiry & Learning**.
+**HARE Trail** — a **Human-Agent Reasoning Environment with Traceable Research Artifacts for Inquiry & Learning**.
 
-It is a file-first work and research system for people working with AI agents. It preserves not only outputs, but the path behind them: sources, questions, hypotheses, attempts, evidence, corrections, debriefs, lessons and reusable workflows.
+A file-first work and research system for people working with AI agents. You work as usual; the system keeps the *path* behind your work — questions, sources, attempts, evidence, corrections, debriefs, lessons — as readable Markdown files that both you and your AI can reopen later.
 
-The first goal is human work: readable notes, recoverable reasoning, explicit evidence and less repeated error. Feeding useful context back to AI agents is a second-order benefit, not the reason the system exists.
+## The pain
 
-## What Problem It Solves
+AI-assisted work leaves important context trapped in chats, terminal scrollback and throwaway notes. Later — next week, next session, next tool — that context is gone:
 
-AI-assisted work often leaves important context trapped in chats, terminal scrollback, local scratch files and untracked notes. A later session can sound confident while missing the actual path: what was asked, what changed, what was checked, what failed and what the user corrected.
+- you come back to a task and spend half an hour rebuilding "where was I, what did we try, what failed";
+- you switch from your IDE agent to a web chat and the new session knows nothing about the old one;
+- a confident summary hides that nothing was actually verified;
+- the same mistake gets made again because the last fix never became a lesson;
+- six months later you can't reconstruct what you did for a self-review.
 
-HARE Trail makes that path inspectable.
+## How HARE Trail addresses it
 
-It is designed to reduce:
+You keep a **reopenable trail**: what was asked, what was checked, what failed — so the next session and the next person don't restart from zero. Concretely:
 
-- overtrust in fluent AI answers;
-- confirmation bias in human-agent work;
-- cross-session and cross-repository context loss;
-- persuasive summaries that hide missing verification;
-- repeated mistakes that never become lessons;
-- private working notes becoming unrecoverable clutter.
+- **The journal writes the path of work; your AI reads it back.** You don't hand-write documentation — the workflow records sources, attempts, evidence and corrections as you go, and a later agent can grep it instead of you re-explaining.
+- **One memory across tools and sessions.** The trail lives in files, not inside one chat — so an IDE agent in the morning and a phone chat in the evening share the same context.
+- **Evidence over fluent answers.** Verification artifacts record *what was actually checked*, so a plausible-sounding summary can't quietly stand in for a real check.
+- **Mistakes become lessons.** Debriefs capture false hypotheses and corrections; lessons are meant to keep the same error from repeating.
 
-## Current Repository Role
+It is built to push back on overtrust in fluent AI answers, on confirmation bias in human-agent work, and on cross-session / cross-repository context loss. The first goal is **human** reasoning; feeding context back to AI agents is a second-order benefit.
 
-This repository is the reusable **system layer**.
+## What you get — small examples
 
-Current maturity: this repository is an early reusable system layer. It includes public docs, reusable skill sources, templates, a connector installer with source-link and thin-wrapper modes, a data repo initializer and a sanitized fixture data repo. A clean-checkout install has not been fully tested end to end yet, and Claude/Codex runtime loading is not fully validated.
+Each example: the pain, the action (your effort ≈ 0 — you work as usual), and what you save.
 
-The target system layer will contain:
+**1. Coming back to a task after a break.**
+- *Without:* 40 minutes re-reading Slack, recalling where you stopped, re-feeding context to the agent.
+- *With:* one command pulls the task's trail — "you stopped here; the last attempt failed because X; next step was Y" — in seconds.
 
-- workflow and command contracts;
-- skills and integration wrappers;
-- templates;
-- setup documentation for Claude and Codex;
-- public philosophy and use-case docs;
-- reusable system behavior docs;
-- sanitized examples and fixtures.
+**2. Cross-agent memory (something a single chat's `resume` cannot do).**
+- *Without:* the work you did in your IDE agent is invisible to tonight's web-chat session.
+- *With:* point the evening session at the day's trail file → it continues with full context. Different tools, different sessions, one memory.
 
-It should not contain:
+**3. Finding the cause of a bug from your own past notes.**
+- *Without:* you half-remember hitting this two months ago, but the reasoning is gone.
+- *With:* grep your own debriefs/journal for the symptom → the earlier investigation and its resolution are right there.
 
-- private notes;
-- real work artifacts;
-- real session debriefs;
-- private lessons;
-- exported private chats;
-- company-specific project history;
-- local absolute paths.
+> These are illustrative use cases, not benchmarked claims — time figures are typical, not measured. The honest promise is "what commands you run and what artifact you get back", not "faster than a plain chat".
 
-Real work belongs in a separate data repository.
+## Walkthrough: read a filled trail
 
-Available now:
+The fastest way to understand the shape is to read a real, filled-in trail rather than a description:
 
-- system/data boundary rules;
-- public philosophy, goals and use-case documentation;
-- command contracts;
-- reusable skill source folders for the core workflows;
-- reusable templates for core artifact types;
-- connector installer for source skill symlinks and generated thin wrappers;
-- data repo initializer for private scaffold creation;
-- Claude/Codex setup contract;
-- analogs comparison;
-- sanitized fixture data repo for smoke-check development;
-- migration target directories for remaining integrations and scripts.
+- **Public worked example:** [`fleytman/thaw-problems`](https://github.com/fleytman/thaw-problems) — a real research task carried through the system (overview docs, journal, tracker, analysis, evidence, drafts), with English and Russian versions.
+- **Bundled fixture:** [`examples/fixture-data-repo/`](examples/fixture-data-repo/) — a small fictional data repo showing the artifact shapes (journal with Question/Attempt/Evidence/Result/Interpretation, tracker, file-summaries, verification, sources, a session debrief).
 
-Not available yet:
+## Install and start
 
-- a validated clean-checkout install path;
-- proven Claude or Codex runtime loading;
-- Docker/container smoke validation.
-
-## Recommended Layout
+Two repositories: this reusable **system** repo, and a private **data** repo for your real notes.
 
 ```text
-haretrail/       # reusable system repository
-haretrail-data/  # private notes, work artifacts, debriefs and lessons
+haretrail/       # reusable system repository (this repo)
+haretrail-data/  # your private notes, work artifacts, debriefs and lessons
 ```
 
-Daily work with real artifacts should usually run from the data repository. System development, reusable templates, skill work and documentation belong here.
+```bash
+# 1. Create a private data repo scaffold (dry-run first to preview)
+./scripts/init-data-repo.sh --dry-run --target /path/to/haretrail-data
+./scripts/init-data-repo.sh --target /path/to/haretrail-data
 
-## Main Concepts
+# 2. Connect the skills to your agent (Claude / Codex / agents dir)
+./scripts/install-connectors.sh --dry-run --data-dir /path/to/haretrail-data
+./scripts/install-connectors.sh --data-dir /path/to/haretrail-data
+```
+
+See [Claude and Codex Setup](docs/setup-claude-codex.md) for connector modes and per-tool details.
+
+> First-time setup is still experimental — a clean-checkout install has not been fully validated end to end yet. See **Status** below for what is and isn't proven.
+
+## How to use it
+
+Commands are workflow contracts, exposed as skills / slash-commands depending on your host tool. Typical loop:
+
+1. `task` — start or continue a task folder for the thing you're working on.
+2. `research` / `summary` — pull in sources, summarize, build a plan, keep tracker + journal as you go.
+3. `verification` artifacts — record what you actually checked.
+4. `debrief` — at the end of a session, capture mistakes, false hypotheses and lessons.
+5. `lessons` / `postmortem` / `contribution-log` — distil reusable lessons, heavy incident analysis, or contribution/self-review evidence.
+
+Core workflows: `task`, `summary`, `research`, `doc-write`, `debrief`, `lessons`, `postmortem`, `contribution-log`. Full contracts: [Commands](docs/commands.md). More examples will live in a dedicated examples doc.
+
+## Main concepts
 
 | Concept | Meaning |
 | --- | --- |
@@ -91,21 +98,6 @@ Daily work with real artifacts should usually run from the data repository. Syst
 | Lessons | Distilled patterns meant to improve future work. |
 | Postmortem | Heavier incident-grade analysis for serious failures. |
 
-## Commands
-
-The core workflows are:
-
-- `task`
-- `summary`
-- `research`
-- `doc-write`
-- `debrief`
-- `lessons`
-- `postmortem`
-- `contribution-log`
-
-See [Commands](docs/commands.md).
-
 ## Documentation
 
 - [Philosophy](docs/philosophy.md)
@@ -116,17 +108,11 @@ See [Commands](docs/commands.md).
 - [Analogs Comparison](docs/compare-analogs.md)
 - [Status and Roadmap](docs/status-and-roadmap.md)
 
-## Current Status
+## Status
 
-Phase 1 is complete: the system/data boundary and repository name are frozen.
+This is an early public release of the reusable **system layer**. Phase 1 (system/data boundary and name) and Phase 2 (public docs independent of the private corpus) are complete. Phase 3 is in progress: reusable skill sources, templates, a sanitized fixture data repo, a source-link/thin-wrapper connector installer and a data repo initializer are present.
 
-Phase 2 is complete: the public docs now describe the reusable system without depending on the private research corpus.
-
-Phase 3 is in progress: reusable skill source folders, templates, a sanitized fixture data repo, a source-link/thin-wrapper installer and a data repo initializer are present. Runtime loading validation and Docker/container smoke still need to be completed.
-
-This is an initial public release. A clean-checkout install has not been fully tested end to end, so treat first-time setup as experimental.
-
-The following items are intentionally not done yet. They stay on the list as not done, but they are now the first steps after this release rather than blockers before it:
+A clean-checkout install has not been fully tested end to end, so treat first-time setup as experimental. The following are intentionally **not done yet** — they are the first steps after this release, not blockers before it:
 
 - validate a clean-checkout install path from scratch;
 - prove Claude/Codex runtime loading from fresh sessions;
@@ -134,7 +120,9 @@ The following items are intentionally not done yet. They stay on the list as not
 - run at least one fixture-only workflow smoke;
 - confirm duplicate skill discovery behavior for Codex and Claude.
 
-## Design Rule
+The data repository (your real notes, work artifacts, debriefs, lessons) is separate and private — see the [Design Rule](#design-rule).
+
+## Design rule
 
 If a file cannot be published without exposing private work, personal history, company context or local paths, it does not belong in this repository. Extract the reusable rule, template or workflow instead.
 
@@ -142,22 +130,16 @@ If a file cannot be published without exposing private work, personal history, c
 
 HARE Trail is source-available, **not** OSI open source.
 
-It is licensed under the **Functional Source License, Version 1.1, MIT Future
-License (FSL-1.1-MIT)** — see [LICENSE](LICENSE). In short:
+It is licensed under the **Functional Source License, Version 1.1, MIT Future License (FSL-1.1-MIT)** — see [LICENSE](LICENSE). In short:
 
 - internal use, noncommercial education and noncommercial research are broadly permitted;
 - a **Competing Use** — a commercial product or service that substitutes for or offers substantially similar functionality to HARE Trail — is **not** permitted;
 - each version **converts to the MIT license two years after its release**.
 
-Please credit the project when you use or build on it — see [NOTICE](NOTICE) for
-the requested attribution (author, repository link and contact). Commercial use
-beyond the license requires a separate agreement (contact m.fleytman@gmail.com).
+Please credit the project when you use or build on it — see [NOTICE](NOTICE) for the requested attribution (author, repository link and contact). Commercial use beyond the license requires a separate agreement (contact m.fleytman@gmail.com).
 
 ## Contributing
 
-Contributions are welcome. By contributing you agree to the
-[Contributor License Agreement](CLA.md), which lets the project keep its
-licensing consistent and offer commercial licenses. To sign, comment on your
-pull request:
+Contributions are welcome. By contributing you agree to the [Contributor License Agreement](CLA.md), which lets the project keep its licensing consistent and offer commercial licenses. To sign, comment on your pull request:
 
 > I have read the CLA Document and I hereby sign the CLA
