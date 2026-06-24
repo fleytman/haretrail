@@ -1,206 +1,206 @@
 # Summary workflow
 
-## Канонические пути
+## Canonical paths
 
-`{data-repo}` — root приватного HARE Trail data repo. Resolve it through `HARETRAIL_DATA_DIR`, then the current workspace if it has the expected data shape, then an explicit user/host-tool path. Do not hardcode personal absolute paths.
+`{data-repo}` — root of the private HARE Trail data repo. Resolve it through `HARETRAIL_DATA_DIR`, then the current workspace if it has the expected data shape, then an explicit user/host-tool path. Do not hardcode personal absolute paths.
 
-- Точка входа: `{data-repo}/AGENTS.md`
-- Базовые правила: `{data-repo}/BASE.md`
-- Папка task-folders и source-packets: `{data-repo}/work-artifacts/`
-- Шаблон долговечных notes: `{data-repo}/notes/README.md`
+- Entry point: `{data-repo}/AGENTS.md`
+- Base rules: `{data-repo}/BASE.md`
+- Task-folder and source-packet directory: `{data-repo}/work-artifacts/`
+- Durable notes template: `{data-repo}/notes/README.md`
 
-## Когда использовать
+## When to use
 
-Используй этот workflow, когда пользователь просит:
+Use this workflow when the user asks to:
 
-- summary пакета файлов;
-- разобрать много документов;
-- разобрать экспортированные чаты, заметки или результаты внешних ИИ;
-- сохранить обработанные материалы так, чтобы их можно было переиспользовать;
-- сделать import + sources + summaries + quotes + prompts.
+- summarize a batch of files;
+- work through many documents;
+- process exported chats, notes or results from external AIs;
+- store processed materials so they can be reused;
+- do import + sources + summaries + quotes + prompts.
 
-## Цель
+## Goal
 
-На входе есть пакет файлов.
+The input is a packet of files.
 
-На выходе должен появиться task-folder, в котором есть:
+The output should be a task-folder that contains:
 
-- `sources/` — копии входных файлов и только качественные конвертации;
-- `file-summaries/` — summaries по документам;
-- `README.md` — общий summary пакета;
-- `prompts/` — prompts для дальнейших исследовательских ИИ, только если пользователь явно попросил их создать или summary является частью явно запрошенного research packet;
-- при необходимости `tracker.md` и `journal.md`, если пакет связан с живой задачей.
+- `sources/` — copies of the input files and only good-quality conversions;
+- `file-summaries/` — summaries per document;
+- `README.md` — overall summary of the packet;
+- `prompts/` — prompts for further research AIs, only if the user explicitly asked to create them or the summary is part of an explicitly requested research packet;
+- if needed, `tracker.md` and `journal.md`, when the packet is tied to a live task.
 
-## 0. Если контекст пакета непонятен
+## 0. If the packet context is unclear
 
-Если из запроса неясно:
+If the request does not make clear:
 
-- зачем пользователь собирает пакет;
-- нужен ли per-file summary или только master summary;
-- нужны ли prompts для внешних ИИ;
-- это самостоятельный packet или часть уже существующей задачи;
-- это `navigator overlay` или `full repack` для legacy migration;
+- why the user is assembling the packet;
+- whether a per-file summary is needed or only a master summary;
+- whether prompts for external AIs are needed;
+- whether this is a standalone packet or part of an existing task;
+- whether this is a `navigator overlay` or a `full repack` for legacy migration;
 
-тогда сначала задать короткие уточняющие вопросы. Не превращать это в длинный опросник.
+then first ask short clarifying questions. Do not turn it into a long questionnaire.
 
 ### Legacy migration modes
 
-Если пользователь переносит старую систему заметок или старый пакет рабочих markdown-файлов:
+If the user is migrating an old note system or an old packet of working markdown files:
 
 - `navigator overlay`
-  - originals остаются основным источником глубины;
-  - новые docs дают карту, summary, links и reading order.
+  - originals remain the primary source of depth;
+  - new docs provide a map, summary, links and reading order.
 - `full repack`
-  - originals сохраняются в `sources/` только как архив;
-  - новые docs должны стать полноценной заменой старой структуры;
-  - допускается свободно перераскладывать содержимое: `1 -> N`, `N -> 1`, вводить новые типы файлов под задачу.
+  - originals are kept in `sources/` only as an archive;
+  - new docs should become a full replacement for the old structure;
+  - it is acceptable to freely rearrange the content: `1 -> N`, `N -> 1`, introduce new file types for the task.
 
-## 1. Определить контейнер
+## 1. Determine the container
 
-1. Если пользователь дал явный slug или путь task-folder, использовать его.
-2. Иначе создать новый folder в `work-artifacts/` по схеме:
+1. If the user gave an explicit task-folder slug or path, use it.
+2. Otherwise create a new folder in `work-artifacts/` using the scheme:
    - `{slug}/`
-3. Если пакет уже относится к существующей задаче, обновлять существующий task-folder, а не создавать новый.
+3. If the packet already belongs to an existing task, update the existing task-folder rather than creating a new one.
 
-## 2. Минимальная структура
+## 2. Minimal structure
 
-Если folder новый, создать:
+If the folder is new, create:
 
 ```text
 {task-folder}/
   README.md
   tracker.md
   journal.md
-  migration-log.md   # если это legacy import / repack
+  migration-log.md   # if this is a legacy import / repack
   sources/
   file-summaries/
 ```
 
-`tracker.md` и `journal.md` можно сделать короткими, но они должны существовать, если пакет связан с продолжающейся работой.
+`tracker.md` and `journal.md` can be short, but they must exist if the packet is tied to ongoing work.
 
-`prompts/` создавать только когда это явно нужно по запросу пользователя или по типу задачи.
+Create `prompts/` only when explicitly needed by the user request or by the type of task.
 
-## 3. Скопировать источники
+## 3. Copy the sources
 
-### Общее правило
+### General rule
 
-- Не удалять и не переписывать оригиналы.
-- Копировать в `sources/`, сохраняя понятную структуру.
-- Для repo-local файлов полезно сохранить репозиторий и относительный путь.
-- Если исходный путь лежит внутри `build/`, `.cache/`, `.app`, `Frameworks/` и похожего технического контейнера, не копировать literal wrapper path без причины; в `sources/` сохранить логически нормализованный путь, а original path зафиксировать в `sources/README.md` или `file-summaries/`.
-- Для exported chats и external note sources полезно сохранить исходный инструмент и дату экспорта.
-- Для legacy import фиксировать отдельно:
-  - source date / source period из самих документов;
-  - export/import timestamp в `{data-repo}`;
-  - точность реально доступных дат.
-- Для каждого imported файла нужно помнить:
-  - исходный путь;
-  - тип файла;
-  - чем конвертировали, если была конвертация;
-  - tracked/untracked, если файл пришёл из git-репозитория.
+- Do not delete or rewrite originals.
+- Copy into `sources/`, preserving a clear structure.
+- For repo-local files it is useful to preserve the repository and the relative path.
+- If the source path is inside `build/`, `.cache/`, `.app`, `Frameworks/` and similar technical containers, do not copy the literal wrapper path without a reason; store a logically normalized path in `sources/` and record the original path in `sources/README.md` or `file-summaries/`.
+- For exported chats and external note sources it is useful to preserve the source tool and the export date.
+- For a legacy import, record separately:
+  - source date / source period from the documents themselves;
+  - export/import timestamp in `{data-repo}`;
+  - precision of the dates that are actually available.
+- For each imported file you need to remember:
+  - the source path;
+  - the file type;
+  - what it was converted with, if there was a conversion;
+  - tracked/untracked, if the file came from a git repository.
 
-### Разговоры и prompts
+### Conversations and prompts
 
-- Если входом является экспортированный чат, сохранить raw export в `sources/`.
-- Если входом является большой prompt или prompt pack, сохранить raw-версию в `sources/` или рядом в `prompts/` как исходный артефакт.
-- Если из сырого prompt рождается более чистый reusable prompt, сохранить его отдельно в `prompts/`, а не затирать исходник.
+- If the input is an exported chat, store the raw export in `sources/`.
+- If the input is a large prompt or a prompt pack, store the raw version in `sources/` or alongside in `prompts/` as the original artifact.
+- If a cleaner reusable prompt emerges from the raw prompt, store it separately in `prompts/` instead of overwriting the original.
 
-### Форматы
+### Formats
 
-- `.md`, `.txt` — копировать как есть
-- `.pdf` — конвертировать только если получается структурно читаемый markdown/html/другой semantically useful text
-- `.docx` — конвертировать только если получается структурно читаемый markdown/html/другой semantically useful text
-- `.xlsx`, `.ods`, `.csv` — копировать оригинал; если формат удаётся разобрать без сильной потери структуры, делать sheet/column summary или аккуратный markdown-preview, а не низкокачественный text dump
-- другие форматы — копировать оригинал и отдельно зафиксировать, что конвертация не сделана
+- `.md`, `.txt` — copy as is
+- `.pdf` — convert only if it produces structurally readable markdown/html/other semantically useful text
+- `.docx` — convert only if it produces structurally readable markdown/html/other semantically useful text
+- `.xlsx`, `.ods`, `.csv` — copy the original; if the format can be parsed without much loss of structure, make a sheet/column summary or a clean markdown preview rather than a low-quality text dump
+- other formats — copy the original and record separately that no conversion was done
 
-Если подходящего инструмента нет:
+If there is no suitable tool:
 
-- не придумывать фиктивную конвертацию;
-- не складировать низкокачественные `.converted.txt` как канонический источник;
-- для табличных файлов предпочесть summary структуры workbook/table поверх оригинала, чем lossy plain-text flattening;
-- записать это в `README.md` и `tracker.md` как tooling gap;
-- спросить пользователя только если без этого summary нельзя сделать качественно.
+- do not invent a fake conversion;
+- do not store low-quality `.converted.txt` as a canonical source;
+- for tabular files prefer a summary of the workbook/table structure over the original rather than a lossy plain-text flattening;
+- record this in `README.md` and `tracker.md` as a tooling gap;
+- ask the user only if a good-quality summary is impossible without it.
 
-## 4. Сделать summaries
+## 4. Make the summaries
 
-### Общий summary пакета
+### Overall packet summary
 
-В `README.md` зафиксировать:
+In `README.md` record:
 
-- зачем пакет собран;
-- какие файлы вошли;
-- главный вывод;
-- source period, если это migrated packet;
-- export/import date отдельно от исторических дат источников;
-- основные кластеры/темы;
-- mermaid-схему связей между файлами, темами и выходными артефактами;
-- какие prompts были сгенерированы.
+- why the packet was assembled;
+- which files went in;
+- the main conclusion;
+- source period, if this is a migrated packet;
+- export/import date separately from the historical dates of the sources;
+- the main clusters/themes;
+- a mermaid diagram of the links between files, themes and output artifacts;
+- which prompts were generated.
 
-### Summary по документам
+### Per-document summaries
 
-По умолчанию делать один master file:
+By default make a single master file:
 
 - `file-summaries/packet-summary.md`
 
-Если пакет очень большой или документы будут переиспользоваться по отдельности, можно дополнительно сделать:
+If the packet is very large or the documents will be reused individually, you can additionally make:
 
-- `file-summaries/{slug}.md` на документ.
+- `file-summaries/{slug}.md` per document.
 
-Для каждого документа фиксировать:
+For each document record:
 
-- путь к оригиналу;
-- краткое описание;
-- source date / period, если они известны;
-- export/import date отдельно, если документ перенесён из другой системы;
-- ключевые мысли;
-- почему документ важен;
-- что из него стоит переиспользовать;
-- важные цитаты.
+- the path to the original;
+- a short description;
+- source date / period, if known;
+- export/import date separately, if the document was migrated from another system;
+- key thoughts;
+- why the document matters;
+- what is worth reusing from it;
+- important quotes.
 
-## 5. Цитаты
+## 5. Quotes
 
-Добавлять только короткие цитаты, если они реально помогают:
+Add only short quotes if they genuinely help to:
 
-- сохранить авторскую формулировку;
-- удержать ограничение;
-- не потерять противоречие;
-- передать стиль и намерение.
+- preserve the author's wording;
+- retain a constraint;
+- avoid losing a contradiction;
+- convey style and intent.
 
-Не надо превращать summary в длинную выжимку цитат.
+Do not turn the summary into a long pile of quotes.
 
 ## 6. Mermaid
 
-Если пакет многослойный, добавить в `README.md` или `file-summaries/packet-summary.md` одну mermaid-схему:
+If the packet is multi-layered, add to `README.md` or `file-summaries/packet-summary.md` a single mermaid diagram:
 
-- потоки данных;
-- связи между документами;
-- переход `sources -> summary -> research -> prompts -> notes` при необходимости.
+- data flows;
+- links between documents;
+- the transition `sources -> summary -> research -> prompts -> notes` when needed.
 
 ## 7. Prompts
 
-Если после summary напрашивается дальнейшая работа, создавать `prompts/*.md` только когда:
+If further work is implied after the summary, create `prompts/*.md` only when:
 
-- пользователь явно попросил prompts;
-- summary является частью явно запрошенного `research packet` для внешних ИИ.
+- the user explicitly asked for prompts;
+- the summary is part of an explicitly requested `research packet` for external AIs.
 
-Типичные prompts:
+Typical prompts:
 
 - critique prompt;
 - deep research prompt;
 - comparison prompt;
-- prompt на извлечение durable notes;
-- prompt на подготовку лекции или доки.
+- prompt to extract durable notes;
+- prompt to prepare a lecture or docs.
 
-## 8. Версионирование
+## 8. Versioning
 
-В основных файлах использовать минимум:
+In the main files use at minimum:
 
 - `Created`
 - `Updated`
 - `Version`
 
-Если файл обновляется повторно, не стирать прошлый смысл, а дописывать change log или новые секции.
+If a file is updated repeatedly, do not erase the previous meaning; append a change log or new sections.
 
-По умолчанию использовать системный формат времени:
+By default use the system time format:
 
 - `DD.MM.YYYY HH:mm:ss.SSS`

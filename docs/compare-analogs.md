@@ -2,6 +2,18 @@
 
 This is a compact public comparison. It is not a full research log.
 
+## Why this list exists, and how to read it
+
+A note on intent, method, and limits — so you can weigh the comparison honestly:
+
+1. **Why publish at all.** HARE Trail started as a tool its author built for himself. It is shared because the author believes the *approach* may be useful to other people — and because surveying the field showed there is no off-the-shelf analog for what it tries to be (more on that below). It is an early proof of concept: not feature-rich, not optimized yet — the bet is on the philosophy behind it.
+2. **What the author is actually trying to build.** Not "a dev tool" and not "a research tool" — an attempt to bring together best practices from *science* and from *software engineering* into one tool that supports human cognitive work: treating reasoning and questions as no less important than answers, treating rejected hypotheses as worth keeping and revisiting, and applying care to a user's work the way one would to user data. That combination is the point, and it is what the analog search struggled to find elsewhere.
+3. **Why collect analogs.** To find the best ideas and the strongest candidates for integration — so as not to reinvent the wheel. Where a dedicated tool is clearly better for a slice of the problem (incident postmortems, session-based exploratory testing, plain project continuity, runtime memory), it is named as a recommended pairing, and HARE Trail composes with it rather than competing.
+4. **Most analogs have not been used hands-on.** They were found and read, and an AI was pointed at their repositories to surface similarities and insights. Conclusions here are based on reading source and docs, not on personally running each tool — treat them as a literate review, not benchmarked verdicts.
+5. **The catalogue itself may be useful to you.** If you are looking for this class of tools, you can reuse the map. A flat, link-only catalogue of everything surveyed is in [analogs-index.md](analogs-index.md) — pointers only, no verdicts, so you can explore yourself. Suggestions of further analogs, especially direct ones, are very welcome.
+
+**On uniqueness.** No individual feature here is unique — durable lessons, user corrections, retrospectives, task continuity, provenance all exist elsewhere. The claim is compositional, and it is about *what the tool is for*: HARE Trail combines a source-bound research/work dossier, verification evidence, debrief/lessons/postmortem, and contribution/invisible-work accounting in a portable, human-readable system/data split — a *synthesis* of process-first reasoning and artifact-first files with evidence-based (not merely textual) verification, aimed at general human+AI work and research rather than a single vertical. The survey did not turn up an existing tool occupying that exact spot; see the axis section below.
+
 ## Feature Matrix
 
 | System | Human-readable source of truth | Agent runtime memory | Task/research folders | Debrief/lessons loop | Source/provenance discipline | Main gap relative to HARE Trail |
@@ -50,6 +62,29 @@ Closest to provenance infrastructure:
 - OriginTrail DKG;
 - `agentmemory`;
 - disciplined Obsidian/source-link setups.
+
+## Spec-Driven Development And The Process/Artifact Axis
+
+A common first-glance reaction is "this looks like spec-driven development (SDD)". SDD tools (OpenSpec, GitHub Spec Kit, Kiro, BMAD, Tessl, Agent OS) and HARE Trail share a surface: files-over-chat, a folder per unit of work, markdown in git, slash commands, the same host agents. The difference is the goal.
+
+A useful frame is one axis with two poles and a synthesis between them:
+
+- **Artifact-first / spec-first** — a specification of intent is the source of truth, written before the code; the spec drives generation and is archived after merge. Optimizes producing code. Examples: Spec Kit, Kiro, BMAD, OpenSpec.
+- **Process-first** — judgment, context and the act of inquiry are primary; lightweight artifacts (charters, session logs, debriefs) serve the process rather than prescribe it. Optimizes learning and checking behaviour. Examples: context-driven testing / SBTM, Rapid Reporter, electronic lab notebooks.
+- **Synthesis** — the reasoning process stays primary, but is preserved in durable, inspectable, versioned files. Examples that reach this for narrow domains: explore-qa and Superpowers (QA / coding sessions), Spec Kitty (governed worktree workflow).
+
+A second axis worth tracking is the **type of verification** a tool offers: evidence-based (real runs) vs textual (one model checks another against the spec text) vs none. Most SDD tools verify textually; the synthesis tools verify with real runs.
+
+| Approach | Source of truth | Pole | Verification | Main gap vs HARE Trail |
+| --- | --- | --- | --- | --- |
+| OpenSpec / Spec Kit / Kiro / BMAD | spec of intent | artifact-first | textual (spec coverage) | no research provenance, debriefs, lessons or contribution layer; delivery-oriented |
+| Agent OS | coding standards | center | none | standards injection only, no research/debrief/verification |
+| explore-qa / Superpowers | session process / executable skill | synthesis | evidence-based | narrow to QA / coding; no cross-session lessons or research dossier |
+| Spec Kitty | mission state in repo | synthesis | evidence-based (worktrees) | heavier formalism; delivery/dev focus |
+| SBTM / context-driven testing | exploratory session | process-first | human judgment | a methodology, broader than one tool; QA focus |
+| Electronic Lab Notebooks / ADR | experiment log / decision record | process-leaning | none / fitness functions | not tuned for AI-agent software workflows |
+
+Where HARE Trail sits: it claims the **synthesis** position — process-first epistemology preserved through an artifact-first filesystem — but for general **work and research**, not only for QA or a single coding feature. SDD and process-first tools are pattern donors HARE Trail can integrate for a given slice, not competitors for the whole system.
 
 ## Where HARE Trail Should Be Distinct
 

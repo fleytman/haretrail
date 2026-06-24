@@ -1,24 +1,24 @@
 ---
 name: task
-description: "Создавать, находить и обновлять task-folders в {data-repo}/work-artifacts, когда пользователь хочет начать или продолжить работу в папке задачи, вести tracker и journal, импортировать материалы и связать их с одной задачей."
+description: "Create, find and update task-folders in {data-repo}/work-artifacts when the user wants to start or continue work inside a task folder, keep a tracker and journal, import materials and tie them to a single task."
 ---
 
 # Task
 
-Этот skill обслуживает создание и ведение task-folders.
+This skill handles the creation and maintenance of task-folders.
 
-Перед работой:
+Before working:
 
-- Прочитай `../_shared/system-behavior.md` как общий reusable behavior contract.
+- Read `../_shared/system-behavior.md` as the shared reusable behavior contract.
 
-- Прочитай `references/workflow.md`.
-- Используй `work-artifacts/README.md` как общую модель task-folder.
-- По умолчанию task-folder создаётся или обновляется в `{data-repo}/work-artifacts/`.
+- Read `references/workflow.md`.
+- Use `work-artifacts/README.md` as the general task-folder model.
+- By default a task-folder is created or updated in `{data-repo}/work-artifacts/`.
 
-Используй этот skill, когда пользователь просит:
+Use this skill when the user asks to:
 
-- "начни вести задачу";
-- "создай папку задачи";
-- "найди task-folder";
-- "давай вести это в work-artifacts";
-- "раскидай это по папке задачи".
+- "start tracking a task";
+- "create a task folder";
+- "find a task-folder";
+- "let's keep this in work-artifacts";
+- "spread this out across a task folder".

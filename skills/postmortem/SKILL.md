@@ -1,16 +1,16 @@
 ---
 name: postmortem
-description: "Создавать и обновлять тяжёлые incident-grade postmortems в {data-repo}/postmortems, когда нужен подробный разбор с Timeline, Impact, 5 Whys, Winback Plan и Lessons Learned. Не использовать для обычных session debriefs."
+description: "Create and update heavy incident-grade postmortems in {data-repo}/postmortems when a detailed analysis with Timeline, Impact, 5 Whys, Winback Plan and Lessons Learned is needed. Do not use for ordinary session debriefs."
 ---
 
 # Postmortem
 
-Этот skill обслуживает отдельный слой тяжёлых postmortem documents.
+This skill handles a separate layer of heavy postmortem documents.
 
-Перед работой:
+Before working:
 
-- Прочитай `../_shared/system-behavior.md` как общий reusable behavior contract.
+- Read `../_shared/system-behavior.md` as the shared reusable behavior contract.
 
-- Прочитай `references/workflow.md`.
-- Используй `postmortems/README.md` как source of truth.
-- Не путай postmortem с обычным `debrief`.
+- Read `references/workflow.md`.
+- Use `postmortems/README.md` as the source of truth.
+- Do not confuse a postmortem with an ordinary `debrief`.

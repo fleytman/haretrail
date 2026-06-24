@@ -1,16 +1,16 @@
 ---
 name: lessons
-description: "Читать и обновлять {data-repo}/LESSONS.md, когда пользователь хочет показать уроки, добавить урок, уточнить формулировку lesson или обновить lessons без полного session debrief."
+description: "Read and update {data-repo}/LESSONS.md when the user wants to show lessons, add a lesson, refine the wording of a lesson, or update lessons without a full session debrief."
 ---
 
 # Lessons
 
-Этот skill обслуживает только слой lessons.
+This skill handles only the lessons layer.
 
-Перед работой:
+Before working:
 
-- Прочитай `../_shared/system-behavior.md` как общий reusable behavior contract.
+- Read `../_shared/system-behavior.md` as the shared reusable behavior contract.
 
-- Прочитай `references/workflow.md`.
-- Используй `LESSONS.md` как source of truth.
-- Не превращай lessons update в полный debrief, если пользователь этого не просил.
+- Read `references/workflow.md`.
+- Use `LESSONS.md` as the source of truth.
+- Do not turn a lessons update into a full debrief unless the user asked for it.

@@ -1,45 +1,45 @@
 # Task workflow
 
-## Канонические пути
+## Canonical paths
 
-`{data-repo}` — root приватного HARE Trail data repo. Resolve it through `HARETRAIL_DATA_DIR`, then the current workspace if it has the expected data shape, then an explicit user/host-tool path. Do not hardcode personal absolute paths.
+`{data-repo}` — root of the private HARE Trail data repo. Resolve it through `HARETRAIL_DATA_DIR`, then the current workspace if it has the expected data shape, then an explicit user/host-tool path. Do not hardcode personal absolute paths.
 
-- Точка входа: `{data-repo}/AGENTS.md`
-- Базовые правила: `{data-repo}/BASE.md`
-- Модель task-folders: `{data-repo}/work-artifacts/README.md`
-- Папка task-folders: `{data-repo}/work-artifacts/`
+- Entry point: `{data-repo}/AGENTS.md`
+- Base rules: `{data-repo}/BASE.md`
+- Task-folder model: `{data-repo}/work-artifacts/README.md`
+- Task-folder directory: `{data-repo}/work-artifacts/`
 
-## Цель
+## Goal
 
-Не начинать сложную работу "просто в чате", если пользователь хочет, чтобы она велась как отдельная задача.
+Do not start complex work "just in the chat" if the user wants it to be tracked as a separate task.
 
-Результат:
+Result:
 
-- найден или создан один task-folder;
-- есть `README.md`, `tracker.md`, `journal.md`;
-- при необходимости созданы `sources/`, `file-summaries/`, `prompts/`, `pr/`, `verification/`.
-- если в folder мигрированы raw sources, у них должен появиться хотя бы один `file-summaries/packet-summary.md`.
+- a single task-folder is found or created;
+- it has `README.md`, `tracker.md`, `journal.md`;
+- if needed, `sources/`, `file-summaries/`, `prompts/`, `pr/`, `verification/` are created.
+- if raw sources were migrated into the folder, they must get at least one `file-summaries/packet-summary.md`.
 
-## 1. Найти или создать
+## 1. Find or create
 
-Приоритет:
+Priority:
 
-1. Если пользователь дал явный путь или slug, использовать его.
-2. Иначе поискать похожие папки в `work-artifacts/`.
-3. Если найдено несколько правдоподобных кандидатов и риск ошибки высок, спросить пользователя.
-4. Если ничего не найдено, создать `{slug}/`.
+1. If the user gave an explicit path or slug, use it.
+2. Otherwise look for similar folders in `work-artifacts/`.
+3. If several plausible candidates are found and the risk of a mistake is high, ask the user.
+4. If nothing is found, create `{slug}/`.
 
 Default placement:
 
-- По умолчанию новый task-folder создаётся в `{data-repo}/work-artifacts/`.
-- Если пользователь явно просит создать artifact в текущем workspace/repo, использовать указанное место и зафиксировать это в `README.md`.
-- Если task-folder создан в `{data-repo}` из контекста внешнего рабочего repo и к нему вероятно будут возвращаться в следующих сессиях, предложить пользователю создать `ln -s` в текущем repo для удобного доступа. Не создавать symlink молча.
-- Новый значимый task-folder должен быть local git repo по умолчанию, если он не tiny/throwaway. Если repo author identity неоднозначна, спросить пользователя или применить local data config.
-- Если task-folder является git repo, новые файлы, явно относящиеся к текущей задаче, нужно добавить в index (`git add <files>`) до завершения работы; unrelated user changes не stage-ить.
+- By default a new task-folder is created in `{data-repo}/work-artifacts/`.
+- If the user explicitly asks to create the artifact in the current workspace/repo, use the specified location and record this in `README.md`.
+- If a task-folder is created in `{data-repo}` from the context of an external working repo and it will likely be revisited in future sessions, suggest that the user create an `ln -s` in the current repo for convenient access. Do not create the symlink silently.
+- A new significant task-folder should be a local git repo by default, unless it is tiny/throwaway. If the repo author identity is ambiguous, ask the user or apply the local data config.
+- If the task-folder is a git repo, new files that clearly belong to the current task must be added to the index (`git add <files>`) before the work is finished; do not stage unrelated user changes.
 
-## 2. Минимальная структура
+## 2. Minimal structure
 
-Новый task-folder должен иметь:
+A new task-folder must have:
 
 ```text
 README.md
@@ -47,7 +47,7 @@ tracker.md
 journal.md
 ```
 
-Опционально:
+Optional:
 
 ```text
 sources/
@@ -58,26 +58,26 @@ verification/
 architecture/
 ```
 
-Для legacy import / repack дополнительно уместен:
+For legacy import / repack the following is also appropriate:
 
 ```text
 migration-log.md
 ```
 
-Если в task-folder импортируются исходные документы:
+If source documents are imported into the task-folder:
 
-- literal build/app-wrapper path не должен становиться каноническим путём хранения без необходимости;
-- `prompts/` не надо создавать автоматически, если пользователь отдельно не просил prompt-артефакты.
+- the literal build/app-wrapper path should not become the canonical storage path without a reason;
+- `prompts/` should not be created automatically unless the user explicitly asked for prompt artifacts.
 
-## 3. Что писать
+## 3. What to write
 
 `README.md`
 
-- что это за задача;
-- зачем она открыта;
-- какие репо/материалы связаны;
-- source period / export date, если это migrated packet;
-- где смотреть дальше.
+- what this task is;
+- why it was opened;
+- which repos/materials are related;
+- source period / export date, if this is a migrated packet;
+- where to look next.
 
 `tracker.md`
 
@@ -88,34 +88,34 @@ migration-log.md
 
 `journal.md`
 
-- append-only записи;
-- каждая запись помечается не только датой/временем, но и **агентом и
-  id сессии**, в рамках которой делалась работа (например
-  `27.05.2026 [Claude Code (Opus 4.7), сессия 717744a5]`). Это нужно,
-  чтобы потом проще искать следы в session-логах
+- append-only entries;
+- each entry is tagged not only with date/time but also with the **agent and
+  session id** under which the work was done (for example
+  `27.05.2026 [Claude Code (Opus 4.7), session 717744a5]`). This is needed so
+  that traces are easier to find later in session logs
   (`~/.claude/projects/**/*.jsonl`, `~/.codex/sessions/**`);
-- развилки;
+- forks;
 - progress updates;
-- важные цитаты.
+- important quotes.
 
 `migration-log.md`
 
-- когда это legacy import или большой перенос, фиксирует:
+- for a legacy import or a large migration, records:
   - source dates;
   - export/import timestamp;
-  - mapping `откуда -> куда`;
-  - точность доступных дат.
+  - mapping `from -> to`;
+  - precision of the available dates.
 
-## 4. Если пользователь просто говорит "давай вести это в папке задачи"
+## 4. If the user just says "let's keep this in a task folder"
 
 Default behavior:
 
-- предложить существующий task-folder, если он явно подходит;
-- иначе создать новый и положить туда стартовый context.
+- suggest an existing task-folder if it clearly fits;
+- otherwise create a new one and put the starting context there.
 
-## 5. Связь с другими skills
+## 5. Relation to other skills
 
-- `summary` может наполнять task-folder sources и file summaries;
-- `research` может вести tracker/journal внутри task-folder;
-- `doc-write` может брать task-folder как источник для clean docs;
-- `debrief` может читать task-folder как дополнительный материал.
+- `summary` can populate the task-folder with sources and file summaries;
+- `research` can keep the tracker/journal inside the task-folder;
+- `doc-write` can use the task-folder as a source for clean docs;
+- `debrief` can read the task-folder as additional material.

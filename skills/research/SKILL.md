@@ -1,24 +1,24 @@
 ---
 name: research
-description: "Вести исследовательскую задачу в {data-repo}: создать или обновить task-folder, собрать/суммаризировать sources, построить план исследования, зафиксировать вопросы и развилки, вести tracker и journal, генерировать prompts для внешних исследовательских ИИ."
+description: "Run a research task in {data-repo}: create or update a task-folder, collect/summarize sources, build a research plan, record questions and forks, keep a tracker and journal, generate prompts for external research AIs."
 ---
 
 # Research
 
-Этот skill обслуживает исследовательские задачи в `{data-repo}`.
+This skill handles research tasks in `{data-repo}`.
 
-Перед работой:
+Before working:
 
-- Прочитай `../_shared/system-behavior.md` как общий reusable behavior contract.
+- Read `../_shared/system-behavior.md` as the shared reusable behavior contract.
 
-- Прочитай `references/workflow.md`.
-- Если есть входной пакет документов, сначала применяй логику `summary`.
-- По умолчанию пиши исследовательские артефакты по-русски, если пользователь не попросил другое.
+- Read `references/workflow.md`.
+- If there is an input packet of documents, first apply the `summary` logic.
+- Write working artifacts in the language configured as HARETRAIL_ARTIFACT_LANG in the local config (~/.haretrail/config.env); if unset, fall back to the language of the current user/dialogue. Do not hardcode a specific language.
 
-Используй этот skill, когда пользователь просит:
+Use this skill when the user asks for:
 
-- исследование;
-- исследовательский план;
-- глубокий разбор темы;
-- собрать вопрос, гипотезы и путь проверки;
-- подготовить пакет для внешних исследовательских ИИ.
+- research;
+- a research plan;
+- a deep dive into a topic;
+- assembling a question, hypotheses and a verification path;
+- preparing a packet for external research AIs.

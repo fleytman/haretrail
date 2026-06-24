@@ -9,3 +9,7 @@ node_modules/
 dist/
 build/
 coverage/
+
+# Russian mirror of skills for the author's convenient development (not part of public canonical skills)
+skills/*/ru/
+skills/*/*/ru/

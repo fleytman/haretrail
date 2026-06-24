@@ -1,35 +1,35 @@
 # Lessons workflow
 
-## Канонические пути
+## Canonical paths
 
-`{data-repo}` — root приватного HARE Trail data repo. Resolve it through `HARETRAIL_DATA_DIR`, then the current workspace if it has the expected data shape, then an explicit user/host-tool path. Do not hardcode personal absolute paths.
+`{data-repo}` — root of the private HARE Trail data repo. Resolve it through `HARETRAIL_DATA_DIR`, then the current workspace if it has the expected data shape, then an explicit user/host-tool path. Do not hardcode personal absolute paths.
 
 - `LESSONS.md`: `{data-repo}/LESSONS.md`
-- Дебрифы: `{data-repo}/session-debriefs/`
+- Debriefs: `{data-repo}/session-debriefs/`
 - Work artifacts: `{data-repo}/work-artifacts/`
 
-## Когда использовать
+## When to use
 
-Используй, когда пользователь просит:
+Use when the user asks to:
 
-- показать lessons;
-- добавить lesson;
-- уточнить существующий lesson;
-- перегруппировать lessons.
+- show lessons;
+- add a lesson;
+- refine an existing lesson;
+- regroup lessons.
 
-## Режимы
+## Modes
 
 ### Read
 
-- показать relevant sections из `LESSONS.md`;
-- если нужно, сослаться на связанные debrief/task artifacts.
+- show the relevant sections from `LESSONS.md`;
+- if needed, reference related debrief/task artifacts.
 
 ### Write
 
-- добавить lesson только если он реально подтверждён;
-- не раздувать `LESSONS.md` шумом;
-- если нужен полный разбор, предложить или использовать `debrief`.
+- add a lesson only if it is genuinely confirmed;
+- do not bloat `LESSONS.md` with noise;
+- if a full analysis is needed, suggest or use `debrief`.
 
-## Принцип
+## Principle
 
-`lessons` — это слой distilled patterns, а не место для подробной хроники.
+`lessons` is a layer of distilled patterns, not a place for a detailed chronicle.

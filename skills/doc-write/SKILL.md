@@ -1,22 +1,22 @@
 ---
 name: doc-write
-description: "Писать и обновлять человекочитаемую документацию для рабочих репозиториев и локальных заметок: коротко, ясно, без длинных code dumps, с учетом правил конкретного репозитория и языка контекста."
+description: "Write and update human-readable documentation for working repositories and local notes: short, clear, without long code dumps, respecting the rules of the specific repository and the language of the context."
 ---
 
 # Doc Write
 
-Этот skill обслуживает создание и обновление документации.
+This skill handles the creation and updating of documentation.
 
-Перед работой:
+Before working:
 
-- Прочитай `../_shared/system-behavior.md` как общий reusable behavior contract.
+- Read `../_shared/system-behavior.md` as the shared reusable behavior contract.
 
-- Прочитай `references/workflow.md`.
-- Сначала найди правила целевого репозитория: `AGENTS.md`, `README`, `docs/`, существующие docs.
-- Не копируй большие куски кода в документацию без необходимости.
+- Read `references/workflow.md`.
+- First find the rules of the target repository: `AGENTS.md`, `README`, `docs/`, existing docs.
+- Do not copy large chunks of code into documentation without a reason.
 
-Используй этот skill, когда пользователь просит:
+Use this skill when the user asks to:
 
-- написать README, guide, migration doc, architecture note, usage doc;
-- сделать документацию короткой и понятной человеку;
-- оформить выводы из рабочей задачи как clean doc.
+- write a README, guide, migration doc, architecture note, usage doc;
+- make documentation short and easy for a human to understand;
+- turn the conclusions of a working task into a clean doc.

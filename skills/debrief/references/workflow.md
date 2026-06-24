@@ -1,88 +1,87 @@
 # Debrief workflow
 
-## Канонические пути
+## Canonical paths
 
-`{data-repo}` — root приватного HARE Trail data repo. Resolve it through `HARETRAIL_DATA_DIR`, then the current workspace if it has the expected data shape, then an explicit user/host-tool path. Do not hardcode personal absolute paths.
+`{data-repo}` — root of the private HARE Trail data repo. Resolve it through `HARETRAIL_DATA_DIR`, then the current workspace if it has the expected data shape, then an explicit user/host-tool path. Do not hardcode personal absolute paths.
 
-- Точка входа: `{data-repo}/AGENTS.md`
-- Базовые правила: `{data-repo}/BASE.md`
-- Индекс уроков и карта дебрифов: `{data-repo}/LESSONS.md`
-- Папка хранения дебрифов: `{data-repo}/session-debriefs/`
-- Формат и назначение дебрифов: `{data-repo}/session-debriefs/README.md`
-- Рабочие task-folders и imported artifacts: `{data-repo}/work-artifacts/`
+- Entry point: `{data-repo}/AGENTS.md`
+- Base rules: `{data-repo}/BASE.md`
+- Lessons index and debrief map: `{data-repo}/LESSONS.md`
+- Debrief storage directory: `{data-repo}/session-debriefs/`
+- Debrief format and purpose: `{data-repo}/session-debriefs/README.md`
+- Working task-folders and imported artifacts: `{data-repo}/work-artifacts/`
 
-Используй эти пути как source of truth, даже если где-то есть symlink в `.claude`, `.codex` или другой служебной папке.
+Use these paths as the source of truth, even if there is a symlink somewhere in `.claude`, `.codex` or another service folder.
 
-## Определить режим
+## Determine the mode
 
-Считать запрос режимом чтения, если пользователь просит:
+Treat the request as read mode if the user asks to:
 - `debrief all`
-- `debrief все`
-- `покажи дебрифы`
-- показать карту уроков/дебрифов
-- прочитать конкретный уже существующий дебриф
+- show debriefs
+- show the lessons/debrief map
+- read a specific existing debrief
 
-Все остальные запросы вида `debrief`, `запиши дебриф`, `создай дебриф`, `обогати дебриф`, `добавь ошибки/уроки в дебриф` считать режимом записи.
+Treat all other requests of the form `debrief`, `write a debrief`, `create a debrief`, `enrich a debrief`, `add mistakes/lessons to a debrief` as write mode.
 
-## Режим чтения
+## Read mode
 
-1. Прочитать `{data-repo}/LESSONS.md`.
-2. Кратко показать карту дебрифов и ключевые уроки.
-3. Если пользователь попросил подробности, прочитать нужный файл из `{data-repo}/session-debriefs/` и показать его кратко и конкретно.
+1. Read `{data-repo}/LESSONS.md`.
+2. Briefly show the debrief map and the key lessons.
+3. If the user asked for details, read the relevant file from `{data-repo}/session-debriefs/` and show it briefly and concretely.
 
-## Режим записи
+## Write mode
 
-### 1. Определить фичу
+### 1. Determine the feature
 
-Slug фичи определять так:
-- Если пользователь явно назвал slug, задачу или конкретный файл дебрифа, использовать это.
-- Иначе взять текущую git-ветку командой `git branch --show-current 2>/dev/null`.
-- Убрать префиксы `fix/`, `feature/`, `feat/`, `hotfix/`, `bugfix/`, `chore/`.
-- Привести остаток к kebab-case.
-- Если ветка пустая, `main`, `master`, `develop`, или текущая директория не является git-репозиторием, спросить пользователя.
+Determine the feature slug as follows:
+- If the user explicitly named a slug, a task or a specific debrief file, use it.
+- Otherwise take the current git branch via `git branch --show-current 2>/dev/null`.
+- Strip prefixes `fix/`, `feature/`, `feat/`, `hotfix/`, `bugfix/`, `chore/`.
+- Convert the remainder to kebab-case.
+- If the branch is empty, `main`, `master`, `develop`, or the current directory is not a git repository, ask the user.
 
-### 2. Определить репозиторий
+### 2. Determine the repository
 
-- Использовать `basename "$(git rev-parse --show-toplevel 2>/dev/null)" 2>/dev/null`.
-- Если не в git-репозитории, спросить пользователя.
+- Use `basename "$(git rev-parse --show-toplevel 2>/dev/null)" 2>/dev/null`.
+- If not in a git repository, ask the user.
 
-### 3. Найти существующий дебриф
+### 3. Find an existing debrief
 
-- Искать по шаблону `{data-repo}/session-debriefs/*{slug}*`.
-- Если файл найден, прочитать его и обогащать без переписывания существующего содержимого.
-- Если не найден, создать `{data-repo}/session-debriefs/YYYY-MM-DD-{slug}-debrief.md`.
+- Search by the pattern `{data-repo}/session-debriefs/*{slug}*`.
+- If a file is found, read it and enrich it without rewriting the existing content.
+- If not found, create `{data-repo}/session-debriefs/YYYY-MM-DD-{slug}-debrief.md`.
 
-### 4. Собрать материал из сессии
+### 4. Collect material from the session
 
-По истории текущего разговора собрать:
-- Ошибки участников:
-  - ошибки текущего агента с явным именем (`Codex`, `Claude Code` и т.п.);
-  - ошибки пользователя, если они важны для динамики задачи;
-  - ошибки других агентов, если они фигурируют в материале.
-- Ложные гипотезы:
-  - по возможности разделять по участникам, а не смешивать в одну массу.
-- Коррекции пользователя: куда пользователь перенаправлял и почему.
-- Что реально сработало: корневая причина, подтверждённый фикс, чем проверили.
-- Выводы: правила для будущих сессий.
-- Если user-side errors или missing constraints выглядят вероятными, но не до конца проявлены в явном виде:
-  - не занижать этот слой из вежливости;
-  - проверить, не было ли misleading UI cue, неполной гипотезы, скрытого ограничения или недосказанного operational assumption;
-  - при необходимости задать 1-3 коротких вопроса пользователю перед финализацией дебрифа.
+From the history of the current conversation, collect:
+- Participant mistakes:
+  - mistakes of the current agent with an explicit name (`Codex`, `Claude Code`, etc.);
+  - mistakes of the user, if they matter to the dynamics of the task;
+  - mistakes of other agents, if they appear in the material.
+- False hypotheses:
+  - where possible, separate them by participant rather than mixing them into one mass.
+- User corrections: where the user redirected and why.
+- What actually worked: the root cause, the confirmed fix, what it was verified with.
+- Conclusions: rules for future sessions.
+- If user-side errors or missing constraints look likely but are not fully made explicit:
+  - do not understate this layer out of politeness;
+  - check whether there was a misleading UI cue, an incomplete hypothesis, a hidden constraint or an unstated operational assumption;
+  - if needed, ask 1-3 short questions to the user before finalizing the debrief.
 
-Нужно быть конкретным:
-- указывать имена файлов, функций, веток, тулов и точные симптомы
-- фиксировать почему гипотеза или фикс были неверны
-- добавлять короткие цитаты пользователя, если они хорошо показывают коррекцию или ограничение
-- добавлять короткие содержательные цитаты агента, если они хорошо показывают ложную гипотезу, premature closure, неверную уверенность или полезный разворот
-- если цитата есть, предпочитать прямой осознанный текст, а не большие вставные куски кода/логов
-- если длинная цитата содержит много шума, сокращать её до смыслового ядра; лишнее убирать, обозначая пропуск `...`, но не переписывать ключевой смысл
-- не использовать двусмысленное `Мои ошибки`; actor должен быть назван явно
+Be concrete:
+- name files, functions, branches, tools and exact symptoms
+- record why a hypothesis or fix was wrong
+- add short user quotes if they clearly show a correction or a constraint
+- add short meaningful agent quotes if they clearly show a false hypothesis, premature closure, wrong confidence or a useful pivot
+- if there is a quote, prefer the direct deliberate text rather than large embedded chunks of code/logs
+- if a long quote contains a lot of noise, shorten it to its semantic core; remove the rest, marking the omission with `...`, but do not rewrite the key meaning
+- do not use the ambiguous `My mistakes`; the actor must be named explicitly
 
-### 4a. Если есть связанные work-artifacts
+### 4a. If there are related work-artifacts
 
-Если по этой же теме есть связанный task-folder или рабочие markdown-файлы в `{data-repo}/work-artifacts/`, использовать их как дополнительный источник фактов.
+If there is a related task-folder or working markdown files in `{data-repo}/work-artifacts/` on the same topic, use them as an additional source of facts.
 
-Приоритет чтения:
+Reading priority:
 
 1. `README.md`
 2. `tracker.md`
@@ -91,77 +90,77 @@ Slug фичи определять так:
 5. `verification/`
 6. `file-summaries/`
 
-Из них полезно вытаскивать:
+From them it is useful to extract:
 
-- подтверждённые симптомы и проверки;
-- развилки и ложные гипотезы;
-- ключевые цитаты пользователя и агента;
-- что считалось текущей моделью проблемы на разных этапах.
+- confirmed symptoms and verifications;
+- forks and false hypotheses;
+- key quotes from the user and the agent;
+- what was considered the current model of the problem at different stages.
 
-### 5. Обновить файл дебрифа
+### 5. Update the debrief file
 
-Если файл новый, использовать такой шаблон:
+If the file is new, use this template:
 
 ```markdown
-# {Название} Debrief
+# {Title} Debrief
 
-Дата: YYYY-MM-DD
-Репо: {имя репо}
-Задача: {краткое описание}
+Date: YYYY-MM-DD
+Repo: {repo name}
+Task: {short description}
 Report Type: Auto-report
-Report Author: {Имя текущего агента}
-Agent Runtime Label: {точный label если известен, иначе `not recorded`}
-User Label: {предпочтительное имя пользователя или `Пользователь`}
+Report Author: {Name of the current agent}
+Agent Runtime Label: {exact label if known, else `not recorded`}
+User Label: {preferred user label or `User`}
 Narrative Mode: actor-labeled
 Session Tool: {Codex / Claude Code / other if known}
-Session ID: {id if known, иначе `not recorded`}
-Resume Handle: {если есть восстановимый handle или raw session path hint, иначе `not recorded`}
+Session ID: {id if known, else `not recorded`}
+Resume Handle: {recoverable handle or raw session path hint if any, else `not recorded`}
 
-## Ошибки участников
-### {Имя текущего агента}
-### Пользователь
-### Другие агенты
+## Participant mistakes
+### {Name of the current agent}
+### User
+### Other agents
 
-## Ложные гипотезы
-### {Имя текущего агента}
-### Пользователь
-### Другие агенты
+## False hypotheses
+### {Name of the current agent}
+### User
+### Other agents
 
-## Коррекции пользователя
-## Ключевые цитаты пользователя
-## Ключевые цитаты агента
-## Что сработало
-## Выводы
+## User corrections
+## Key user quotes
+## Key agent quotes
+## What worked
+## Conclusions
 ```
 
-`### Другие агенты` добавлять только если там реально есть материал.
-Если отдельное имя пользователя не настроено, использовать `Пользователь`.
-Если exact runtime model / reasoning effort не известны надёжно, не придумывать их; писать `Agent Runtime Label: not recorded`.
-Если `Session Tool`, `Session ID` или `Resume Handle` неизвестны, не выдумывать; писать `not recorded`.
+Add `### Other agents` only if there is actual material there.
+If a separate user name is not configured, use `User`.
+If the exact runtime model / reasoning effort is not reliably known, do not invent it; write `Agent Runtime Label: not recorded`.
+If `Session Tool`, `Session ID` or `Resume Handle` are unknown, do not make them up; write `not recorded`.
 
-Если файл уже существует:
-- Добавлять только новые факты и уроки.
-- Не дублировать существующие пункты.
-- Не переписывать историю задним числом.
-- Если новое обновление произошло в другой день, добавить маркер `### Обновление YYYY-MM-DD`.
-- Если старая запись оказалась неверной, дописать коррекцию, а не стирать прошлую мысль.
+If the file already exists:
+- Add only new facts and lessons.
+- Do not duplicate existing items.
+- Do not rewrite history after the fact.
+- If a new update happened on a different day, add the marker `### Update YYYY-MM-DD`.
+- If an old entry turned out to be wrong, append a correction rather than erasing the previous thought.
 
-## Принципы записи
+## Writing principles
 
-- Язык: русский.
-- Тон: честный постмортем, без сглаживания ошибок.
-- Фокус: почему произошло, а не только что сделали.
-- Писать только по фактам, которые реально были в сессии.
-- Если есть рабочие артефакты, не копировать их целиком в дебриф; вытаскивать только уроки, ошибки, ложные ходы и подтверждённый исход.
-- Для actor-aware записи явно называть участника в секции или подпункте, а не использовать местоимения вроде `я` или `мы`, если это создаёт неоднозначность.
-- В auto-generated persistent docs не использовать первое лицо от имени агента; центральным `я` при желании может быть только пользователь в собственных добавлениях.
-- Если user-side mistakes почти не зафиксированы, но пользователь многократно правил агента или в истории есть сомнительные предпосылки, это повод проверить слой user-side assumptions отдельно, а не автоматически писать "ошибок не было".
+- Language: write in the language configured as HARETRAIL_ARTIFACT_LANG in the local config (~/.haretrail/config.env); if unset, fall back to the language of the current user/dialogue. Do not hardcode a specific language.
+- Tone: an honest postmortem, without smoothing over mistakes.
+- Focus: why it happened, not only what was done.
+- Write only about facts that actually occurred in the session.
+- If there are working artifacts, do not copy them wholesale into the debrief; extract only the lessons, mistakes, false moves and the confirmed outcome.
+- For actor-aware records, explicitly name the participant in the section or sub-item rather than using pronouns like `I` or `we` when this creates ambiguity.
+- In auto-generated persistent docs do not use the first person on behalf of the agent; the central `I`, if desired, can only be the user in their own additions.
+- If user-side mistakes are barely recorded but the user repeatedly corrected the agent or the history contains questionable premises, that is a reason to check the user-side assumptions layer separately rather than automatically writing "there were no mistakes".
 
-### 6. Обновить LESSONS.md
+### 6. Update LESSONS.md
 
-В `{data-repo}/LESSONS.md` нужно:
-- добавить или уточнить строку в карте дебрифов
-- добавить новые уроки в подходящие категории, не дублируя существующие
-- обновить статистику ошибок, если действительно появился новый подтверждённый случай паттерна
+In `{data-repo}/LESSONS.md` you need to:
+- add or refine a line in the debrief map
+- add new lessons to the appropriate categories without duplicating existing ones
+- update the error statistics if a genuinely new confirmed case of a pattern appeared
 
-Если правка только уточняет формулировку уже учтённого паттерна, счётчики не увеличивать автоматически.
+If the edit only refines the wording of an already counted pattern, do not increment the counters automatically.

@@ -1,24 +1,24 @@
 ---
 name: summary
-description: "Обрабатывать пакет документов или файлов для {data-repo}: копировать источники в work-artifacts, конвертировать тяжёлые форматы в markdown/text, делать общий summary, file summaries, извлекать важные цитаты, строить mermaid-схему и при необходимости генерировать prompts для дальнейшего исследования."
+description: "Process a packet of documents or files for {data-repo}: copy sources into work-artifacts, convert heavy formats to markdown/text, write an overall summary, file summaries, extract important quotes, build a mermaid diagram and, if needed, generate prompts for further research."
 ---
 
 # Summary
 
-Этот skill обслуживает пакетную обработку документов и source-packets в `{data-repo}`.
+This skill handles batch processing of documents and source-packets in `{data-repo}`.
 
-Перед работой:
+Before working:
 
-- Прочитай `../_shared/system-behavior.md` как общий reusable behavior contract.
+- Read `../_shared/system-behavior.md` as the shared reusable behavior contract.
 
-- Прочитай `references/workflow.md` и следуй ему как source of truth.
-- Считай каноническими только пути в `{data-repo}`, а не `.claude` или `.codex`.
-- По умолчанию summary-артефакты пиши по-русски, если пользователь не попросил другой язык.
+- Read `references/workflow.md` and follow it as the source of truth.
+- Treat only paths in `{data-repo}` as canonical, not `.claude` or `.codex`.
+- Write working artifacts in the language configured as HARETRAIL_ARTIFACT_LANG in the local config (~/.haretrail/config.env); if unset, fall back to the language of the current user/dialogue. Do not hardcode a specific language.
 
-Используй этот skill, когда нужно:
+Use this skill when you need to:
 
-- разобрать пачку документов;
-- собрать `sources/` и `file-summaries/`;
-- сохранить важные мысли и цитаты;
-- подготовить пакет для будущего исследования;
-- не потерять контекст из pdf/docx/md/txt и похожих форматов.
+- work through a batch of documents;
+- assemble `sources/` and `file-summaries/`;
+- preserve important thoughts and quotes;
+- prepare a packet for future research;
+- avoid losing context from pdf/docx/md/txt and similar formats.

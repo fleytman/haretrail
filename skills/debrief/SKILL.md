@@ -1,17 +1,17 @@
 ---
 name: debrief
-description: "Читать, создавать и обновлять session debriefs и LESSONS.md в {data-repo}, когда пользователь просит debrief, debrief all, покажи дебрифы, создать дебриф, записать дебриф, обогатить дебриф, добавить ошибки или уроки в дебриф. При наличии связанных work-artifacts использовать их как дополнительный материал. Не использовать для обычных заметок вне этой системы."
+description: "Read, create and update session debriefs and LESSONS.md in {data-repo} when the user asks for a debrief, debrief all, show debriefs, create a debrief, write a debrief, enrich a debrief, add mistakes or lessons to a debrief. When related work-artifacts exist, use them as additional material. Do not use for ordinary notes outside this system."
 ---
 
 # Debrief
 
-Этот skill обслуживает каноническую систему session debriefs в `{data-repo}`.
+This skill handles the canonical session-debriefs system in `{data-repo}`.
 
-Перед работой:
+Before working:
 
-- Прочитай `../_shared/system-behavior.md` как общий reusable behavior contract.
-- Прочитай `references/workflow.md` и следуй ему как source of truth.
-- Считай каноническими только пути в `{data-repo}`, а не в `.claude` или `.codex`.
-- Пиши по-русски.
+- Read `../_shared/system-behavior.md` as the shared reusable behavior contract.
+- Read `references/workflow.md` and follow it as the source of truth.
+- Treat only paths in `{data-repo}` as canonical, not those in `.claude` or `.codex`.
+- Write working artifacts in the language configured as HARETRAIL_ARTIFACT_LANG in the local config (~/.haretrail/config.env); if unset, fall back to the language of the current user/dialogue. Do not hardcode a specific language.
 
-Если пользовательский запрос двусмысленен, сначала определи режим: обзор всех дебрифов, чтение конкретного дебрифа или запись/обогащение дебрифа.
+If the user's request is ambiguous, first determine the mode: overview of all debriefs, reading a specific debrief, or writing/enriching a debrief.

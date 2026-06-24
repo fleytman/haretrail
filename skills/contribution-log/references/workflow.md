@@ -1,63 +1,63 @@
 # Contribution Log workflow
 
-## Канонические пути
+## Canonical paths
 
-`{data-repo}` — root приватного HARE Trail data repo. Resolve it through `HARETRAIL_DATA_DIR`, then the current workspace if it has the expected data shape, then an explicit user/host-tool path. Do not hardcode personal absolute paths.
+`{data-repo}` — root of the private HARE Trail data repo. Resolve it through `HARETRAIL_DATA_DIR`, then the current workspace if it has the expected data shape, then an explicit user/host-tool path. Do not hardcode personal absolute paths.
 
-- Точка входа: `{data-repo}/AGENTS.md`
-- Базовые правила: `{data-repo}/BASE.md`
-- Модель task-folders: `{data-repo}/work-artifacts/README.md`
-- Папка task-folders: `{data-repo}/work-artifacts/`
+- Entry point: `{data-repo}/AGENTS.md`
+- Base rules: `{data-repo}/BASE.md`
+- Task-folder model: `{data-repo}/work-artifacts/README.md`
+- Task-folder directory: `{data-repo}/work-artifacts/`
 
-## Когда использовать
+## When to use
 
-Используй, когда пользователь хочет:
+Use when the user wants to:
 
-- вести contribution log;
-- собирать evidence для self-review;
-- фиксировать help given / help received;
-- сохранять glue work и другой труднооцифровываемый вклад;
-- импортировать workbook/logbook вроде `xlsx/csv/ods` с contribution history;
-- подготовить материал для разговора с менеджером или review без потери контекста.
+- keep a contribution log;
+- gather evidence for a self-review;
+- record help given / help received;
+- preserve glue work and other hard-to-quantify contribution;
+- import a workbook/logbook such as `xlsx/csv/ods` with contribution history;
+- prepare material for a conversation with a manager or a review without losing context.
 
-## Принцип
+## Principle
 
-`contribution-log` — это слой видимости вклада и процесса, а не рейтинг и не перформанс-дашборд.
+`contribution-log` is a layer of visibility into contribution and process, not a rating and not a performance dashboard.
 
-Главные принципы:
+Main principles:
 
-- не сводить вклад к счётчикам;
-- различать `countable` и `intangible` contribution;
-- сохранять кому именно был полезен вклад и какую проблему он снял;
-- отдельно держать помощь от других и незавершённую, но значимую работу;
-- хранить evidence links и короткий контекст, но не превращать лог в длинную автобиографию.
+- do not reduce contribution to counters;
+- distinguish `countable` and `intangible` contribution;
+- preserve exactly who the contribution was useful to and which problem it removed;
+- keep help received and unfinished but significant work separately;
+- store evidence links and short context, but do not turn the log into a long autobiography.
 
-## 1. Найти или создать контейнер
+## 1. Find or create the container
 
-Приоритет:
+Priority:
 
-1. Если пользователь дал явный folder или slug, использовать его.
-2. Иначе поискать похожие папки в `work-artifacts/`:
+1. If the user gave an explicit folder or slug, use it.
+2. Otherwise look for similar folders in `work-artifacts/`:
    - `contribution-log`
    - `self-review`
    - `work-visibility`
-   - периодические варианты вроде `self-review-2026-h1`
-3. Если ничего не найдено, по умолчанию создать:
+   - periodic variants such as `self-review-2026-h1`
+3. If nothing is found, by default create:
 
 ```text
 work-artifacts/contribution-log/
 ```
 
-Если пользователь явно работает по периоду, допустимы container names вроде:
+If the user is explicitly working by period, container names such as the following are acceptable:
 
 ```text
 work-artifacts/self-review-2026-h1/
 work-artifacts/contribution-log-2026/
 ```
 
-## 2. Минимальная структура
+## 2. Minimal structure
 
-Новый container должен иметь:
+A new container must have:
 
 ```text
 README.md
@@ -69,7 +69,7 @@ logs/
   unfinished.md
 ```
 
-Опционально:
+Optional:
 
 ```text
 sources/
@@ -78,73 +78,73 @@ evidence/
 prompts/
 ```
 
-`evidence/` уместен для:
+`evidence/` is appropriate for:
 
-- скриншотов;
+- screenshots;
 - exported tables;
 - pasted message drafts;
-- вспомогательных артефактов self-review.
+- supporting self-review artifacts.
 
-Если импортирован workbook/logbook, у него должен появиться хотя бы один:
+If a workbook/logbook is imported, it must get at least one:
 
 ```text
 file-summaries/packet-summary.md
 ```
 
-## 3. Что писать
+## 3. What to write
 
 `README.md`
 
-- что это за contribution log;
-- чей он;
-- какой период покрывает;
-- зачем ведётся;
-- где смотреть дальше;
-- как читать entries.
+- what this contribution log is;
+- whose it is;
+- which period it covers;
+- why it is kept;
+- where to look next;
+- how to read the entries.
 
 `tracker.md`
 
-- текущий период;
-- что уже собрано;
-- каких evidence gaps не хватает;
-- какие разделы надо добрать;
-- какой следующий шаг для self-review packet.
+- the current period;
+- what has already been gathered;
+- which evidence gaps are missing;
+- which sections need to be filled in;
+- the next step for the self-review packet.
 
 `journal.md`
 
-- append-only лог о том, как собирался и пересобирался contribution packet;
-- сомнения;
-- развилки;
-- почему какие-то вещи были добавлены или исключены;
-- важные user/manager quotes про оценку вклада и метрики.
+- an append-only log of how the contribution packet was assembled and reassembled;
+- doubts;
+- forks;
+- why some things were added or excluded;
+- important user/manager quotes about evaluating contribution and metrics.
 
 `logs/contributions.md`
 
-- что пользователь сделал для других или для системы;
-- кому это помогло;
-- какую проблему сняло;
-- был ли вклад `countable`, `intangible` или смешанный;
+- what the user did for others or for the system;
+- whom it helped;
+- which problem it removed;
+- whether the contribution was `countable`, `intangible` or mixed;
 - evidence links;
-- почему это важно.
+- why it matters.
 
 `logs/received-help.md`
 
-- кто помог пользователю;
-- с чем именно;
-- как это повлияло на работу;
-- есть ли follow-up или reciprocity note.
+- who helped the user;
+- with what exactly;
+- how it affected the work;
+- whether there is a follow-up or a reciprocity note.
 
 `logs/unfinished.md`
 
-- что было начато, но не доведено;
-- почему это всё равно значимо;
-- почему остановлено;
-- какие материалы уже есть;
-- когда вернуться.
+- what was started but not finished;
+- why it is still significant;
+- why it was stopped;
+- which materials already exist;
+- when to return to it.
 
-## 4. Формат entries
+## 4. Entry format
 
-По умолчанию использовать датированные entries с краткой структурой:
+By default use dated entries with a short structure:
 
 ```markdown
 ## DD.MM.YYYY
@@ -158,9 +158,8 @@ file-summaries/packet-summary.md
 - Evidence:
 - Notes:
 ```
-```
 
-Для `received-help.md`:
+For `received-help.md`:
 
 ```markdown
 ## DD.MM.YYYY
@@ -172,9 +171,8 @@ file-summaries/packet-summary.md
 - Evidence:
 - Follow-up:
 ```
-```
 
-Для `unfinished.md`:
+For `unfinished.md`:
 
 ```markdown
 ## DD.MM.YYYY
@@ -188,46 +186,45 @@ file-summaries/packet-summary.md
 - Existing artifacts / evidence:
 - Suggested next moment to revisit:
 ```
-```
 
-Если у пользователя уже есть spreadsheet или свой формат, не ломать его без необходимости:
+If the user already has a spreadsheet or their own format, do not break it without a reason:
 
-- сохранить original в `sources/`;
-- поверх него сделать structured summary и/или markdown replacement docs.
+- keep the original in `sources/`;
+- on top of it make a structured summary and/or markdown replacement docs.
 
-## 5. Табличные артефакты
+## 5. Tabular artifacts
 
-Для `xlsx/csv/ods`:
+For `xlsx/csv/ods`:
 
-- хранить оригинал как source of truth;
-- не flattening-ить workbook в lossy plain text;
-- фиксировать:
-  - список листов;
-  - смысл каждого листа;
-  - ключевые колонки;
-  - приблизительный объём;
-  - что в этой таблице особенно ценно для self-review.
+- keep the original as the source of truth;
+- do not flatten the workbook into lossy plain text;
+- record:
+  - the list of sheets;
+  - the meaning of each sheet;
+  - the key columns;
+  - the approximate size;
+  - what is especially valuable in this table for self-review.
 
-Если есть явные листы вроде:
+If there are explicit sheets such as:
 
-- `кому помог`;
-- `кто помог`;
-- `начал, но не доделал`;
+- `whom I helped`;
+- `who helped me`;
+- `started but not finished`;
 
-то сохранять эту семантику, а не схлопывать всё в одну простыню.
+then preserve this semantics rather than collapsing everything into one flat sheet.
 
-## 6. Что не делать
+## 6. What not to do
 
-- не превращать contribution log в brag document без контекста;
-- не удалять help received, оставляя только personal wins;
-- не выбрасывать незавершённую работу, если она показывает важный, но труднооцифровываемый вклад;
-- не подменять evidence риторикой;
-- не использовать этот skill для session debrief или incident postmortem.
+- do not turn the contribution log into a brag document without context;
+- do not remove help received, leaving only personal wins;
+- do not discard unfinished work if it shows an important but hard-to-quantify contribution;
+- do not substitute rhetoric for evidence;
+- do not use this skill for a session debrief or an incident postmortem.
 
-## 7. Связь с другими skills
+## 7. Relation to other skills
 
-- `task` может создать или найти контейнер;
-- `summary` может импортировать workbook/chat/log packet в `sources/` и `file-summaries/`;
-- `doc-write` может превращать contribution packet в clean self-review document;
-- `lessons` может брать из contribution logs устойчивые паттерны, но только если они действительно повторяются;
-- `research` может использовать такие пакеты как материал для тем про glue work, metrics и process visibility.
+- `task` can create or find the container;
+- `summary` can import a workbook/chat/log packet into `sources/` and `file-summaries/`;
+- `doc-write` can turn the contribution packet into a clean self-review document;
+- `lessons` can take durable patterns from contribution logs, but only if they genuinely recur;
+- `research` can use such packets as material for topics about glue work, metrics and process visibility.

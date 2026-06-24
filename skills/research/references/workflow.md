@@ -1,28 +1,28 @@
 # Research workflow
 
-## Канонические пути
+## Canonical paths
 
-`{data-repo}` — root приватного HARE Trail data repo. Resolve it through `HARETRAIL_DATA_DIR`, then the current workspace if it has the expected data shape, then an explicit user/host-tool path. Do not hardcode personal absolute paths.
+`{data-repo}` — root of the private HARE Trail data repo. Resolve it through `HARETRAIL_DATA_DIR`, then the current workspace if it has the expected data shape, then an explicit user/host-tool path. Do not hardcode personal absolute paths.
 
-- Точка входа: `{data-repo}/AGENTS.md`
-- Базовые правила: `{data-repo}/BASE.md`
+- Entry point: `{data-repo}/AGENTS.md`
+- Base rules: `{data-repo}/BASE.md`
 - Task-folders: `{data-repo}/work-artifacts/`
 - Summary workflow: `skills/summary/references/workflow.md` in the HARE Trail system repo
 - Durable notes: `{data-repo}/notes/`
 
-## Когда использовать
+## When to use
 
-Используй этот workflow, когда пользователь хочет не просто summary источников, а полноценное исследование:
+Use this workflow when the user wants not just a summary of sources but full research:
 
-- есть вопрос, который будет меняться и уточняться;
-- нужны гипотезы, проверки и развилки;
-- нужно собирать не только документы, но и сам ход мысли;
-- нужны prompts для дальнейшего deep research;
-- задача может идти через несколько репозиториев, разговоров и внешних материалов.
+- there is a question that will change and get refined;
+- hypotheses, checks and forks are needed;
+- you need to collect not only documents but the line of reasoning itself;
+- prompts for further deep research are needed;
+- the task may span several repositories, conversations and external materials.
 
-## Результат
+## Result
 
-На выходе должен быть task-folder с минимумом:
+The output should be a task-folder with at minimum:
 
 ```text
 {task-folder}/
@@ -33,61 +33,61 @@
   file-summaries/
 ```
 
-`prompts/` добавлять только когда пользователь просит подготовить их для внешних исследовательских ИИ или это явно входит в requested output.
+Add `prompts/` only when the user asks to prepare them for external research AIs or it is explicitly part of the requested output.
 
 Default placement:
 
-- По умолчанию новый research artifact создаётся в `{data-repo}/work-artifacts/`.
-- Если пользователь явно просит создать artifact в текущем workspace/repo, использовать указанное место и зафиксировать это в `README.md`.
-- Если research folder создан в `{data-repo}` из контекста внешнего рабочего repo и к нему вероятно будут возвращаться в следующих сессиях, предложить пользователю создать `ln -s` в текущем repo для удобного доступа. Не создавать symlink молча.
-- Новый значимый research artifact должен быть local git repo по умолчанию, если он не tiny/throwaway. Если repo author identity неоднозначна, спросить пользователя или применить local data config.
-- Если research folder является git repo, новые файлы, явно относящиеся к текущему исследованию, нужно добавить в index (`git add <files>`) до завершения работы; unrelated user changes не stage-ить.
+- By default a new research artifact is created in `{data-repo}/work-artifacts/`.
+- If the user explicitly asks to create the artifact in the current workspace/repo, use the specified location and record this in `README.md`.
+- If a research folder is created in `{data-repo}` from the context of an external working repo and it will likely be revisited in future sessions, suggest that the user create an `ln -s` in the current repo for convenient access. Do not create the symlink silently.
+- A new significant research artifact should be a local git repo by default, unless it is tiny/throwaway. If the repo author identity is ambiguous, ask the user or apply the local data config.
+- If the research folder is a git repo, new files that clearly belong to the current research must be added to the index (`git add <files>`) before the work is finished; do not stage unrelated user changes.
 
-## 1. Собрать контекст
+## 1. Gather context
 
-1. Если есть входной пакет документов, прогнать логикой `summary`.
-2. Если нет документов, но есть вопрос, создать task-folder и записать стартовый контекст вручную.
-3. Если стартовым материалом служит разговор с ИИ, большой prompt или экспорт внешнего чата, сохранить raw artifact в `sources/` и зафиксировать это в `README.md`.
-4. Если вопрос сильно двусмысленный и без уточнения исследование получится мусорным, задать короткие вопросы пользователю.
+1. If there is an input packet of documents, run it through the `summary` logic.
+2. If there are no documents but there is a question, create a task-folder and record the starting context manually.
+3. If the starting material is a conversation with an AI, a large prompt or an export of an external chat, store the raw artifact in `sources/` and record this in `README.md`.
+4. If the question is very ambiguous and the research would be junk without clarification, ask the user short questions.
 
-## 2. Зафиксировать стартовое состояние
+## 2. Record the starting state
 
-В `tracker.md` записать:
+In `tracker.md` write:
 
-- формулировку вопроса сейчас;
-- зачем это исследование;
-- ограничения;
-- текущую рабочую гипотезу;
-- что нужно получить на выходе.
+- the wording of the question as it is now;
+- why this research is being done;
+- constraints;
+- the current working hypothesis;
+- what the output should be.
 
-## 3. Составить исследовательский план
+## 3. Build a research plan
 
-План должен быть коротким и проверяемым:
+The plan should be short and verifiable:
 
-- какие направления проверить;
-- какие данные/источники нужны;
-- какие гипотезы уязвимы;
-- какие вопросы надо задать пользователю;
-- какие внешние исследовательские ИИ можно использовать позже.
+- which directions to check;
+- which data/sources are needed;
+- which hypotheses are vulnerable;
+- which questions to ask the user;
+- which external research AIs can be used later.
 
-## 4. Вести `journal.md`
+## 4. Keep `journal.md`
 
-`journal.md` — append-only.
+`journal.md` is append-only.
 
-Фиксировать:
+Record:
 
-- как менялся вопрос;
-- что предполагал пользователь;
-- что предполагал агент;
-- что проверили;
-- что оказалось ложным;
-- что оказалось сильным контрпримером;
-- как изменилось понимание;
-- важные цитаты пользователя и ИИ.
+- how the question changed;
+- what the user assumed;
+- what the agent assumed;
+- what was checked;
+- what turned out to be false;
+- what turned out to be a strong counterexample;
+- how the understanding changed;
+- important quotes from the user and the AI.
 
-## 5. Обязательные секции
+## 5. Mandatory sections
 
-### В `tracker.md`
+### In `tracker.md`
 
 - Current question
 - Current hypothesis
@@ -95,7 +95,7 @@ Default placement:
 - Open questions
 - Next step
 
-### В `journal.md`
+### In `journal.md`
 
 - timestamp
 - question at this moment
@@ -106,35 +106,35 @@ Default placement:
 
 ## 6. Prompts
 
-Если исследование стоит продолжить внешними системами, создавать prompts в `prompts/` только когда:
+If the research is worth continuing with external systems, create prompts in `prompts/` only when:
 
-- пользователь прямо попросил prompt-файлы;
-- пользователь просит research packet для внешней системы;
-- в текущем task-folder prompts уже существуют как явный тип артефакта.
+- the user explicitly asked for prompt files;
+- the user asks for a research packet for an external system;
+- prompts already exist in the current task-folder as an explicit artifact type.
 
-Типичные prompts:
+Typical prompts:
 
 - `deep-research-prompt.md`
 - `compare-approaches-prompt.md`
 - `critique-current-model-prompt.md`
 - `extract-durable-notes-prompt.md`
 
-Языковое правило для prompt-файлов:
+Language rule for prompt files:
 
-- без отдельного указания пользователя reusable prompts делать на языке пользователя текущего диалога;
-- если внешний инструмент или целевая аудитория явно требуют другого языка, сначала уточнить это у пользователя или сделать параллельные версии с явной маркировкой (`-ru`, `-en`);
-- не оставлять canonical prompt-файл на "случайно выбранном" языке без маркировки.
+- without a separate instruction from the user, write reusable prompts in the language of the current dialogue;
+- if the external tool or the target audience clearly requires another language, first clarify this with the user or make parallel versions with explicit marking (`-ru`, `-en`);
+- do not leave a canonical prompt file in a "randomly chosen" language without marking.
 
-## 7. Переход в durable notes и debriefs
+## 7. Transition into durable notes and debriefs
 
-После значимого этапа полезно решить:
+After a significant stage it is useful to decide:
 
-- что надо вынести в `notes/` как долговечную заметку;
-- что надо вынести в `session-debriefs/` как debrief по ошибке или ложной гипотезе.
-- что надо сохранить как reusable prompt или summary для переключения между моделями и следующими сессиями.
+- what should be moved into `notes/` as a durable note;
+- what should be moved into `session-debriefs/` as a debrief about a mistake or false hypothesis.
+- what should be saved as a reusable prompt or summary for switching between models and future sessions.
 
-Не путать эти слои:
+Do not confuse these layers:
 
-- research = ход мысли и исследование;
-- debrief = уроки и ошибки;
-- notes = устойчивое знание.
+- research = line of reasoning and investigation;
+- debrief = lessons and mistakes;
+- notes = durable knowledge.

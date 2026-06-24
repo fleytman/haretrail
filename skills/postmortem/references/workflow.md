@@ -1,18 +1,18 @@
 # Postmortem workflow
 
-## Канонические пути
+## Canonical paths
 
-`{data-repo}` — root приватного HARE Trail data repo. Resolve it through `HARETRAIL_DATA_DIR`, then the current workspace if it has the expected data shape, then an explicit user/host-tool path. Do not hardcode personal absolute paths.
+`{data-repo}` — root of the private HARE Trail data repo. Resolve it through `HARETRAIL_DATA_DIR`, then the current workspace if it has the expected data shape, then an explicit user/host-tool path. Do not hardcode personal absolute paths.
 
-- Папка postmortems: `{data-repo}/postmortems/`
-- README postmortems: `{data-repo}/postmortems/README.md`
+- Postmortems directory: `{data-repo}/postmortems/`
+- Postmortems README: `{data-repo}/postmortems/README.md`
 - Lessons: `{data-repo}/LESSONS.md`
 
-## Когда использовать
+## When to use
 
-Используй только для тяжёлых случаев, где нужен детальный incident analysis.
+Use only for heavy cases that need a detailed incident analysis.
 
-## Формат
+## Format
 
 ```markdown
 # {Title} Postmortem
@@ -23,7 +23,7 @@ Status:
 Report Type: Auto-report
 Report Author: {Agent}
 Agent Runtime Label: {exact label if known, else `not recorded`}
-User Label: {preferred user label or `Пользователь`}
+User Label: {preferred user label or `User`}
 Narrative Mode: actor-labeled
 
 ## Summary
@@ -35,12 +35,12 @@ Narrative Mode: actor-labeled
 ## Other Details
 ```
 
-## Принцип
+## Principle
 
-- Не every mistake deserves a postmortem.
+- Not every mistake deserves a postmortem.
 - `postmortem` = heavy, explicit, structured, incident-grade.
-- Session-level mistakes обычно идут в `debrief`.
-- В auto-generated postmortems агент не пишет безличное `я`; использовать явные actor labels.
-- В `Timeline` сразу после `Summary` стремиться писать точные timestamps; если точное время недоступно, явно указывать доступную точность.
-- В `Timeline` использовать точные цитаты, когда они критичны для разворота ситуации.
-- `5 Whys` по умолчанию можно дать как draft от агента, но это должна быть зона, которую пользователь может уточнить или переписать.
+- Session-level mistakes usually go into `debrief`.
+- In auto-generated postmortems the agent does not write an impersonal `I`; use explicit actor labels.
+- In `Timeline`, right after `Summary`, aim to write exact timestamps; if the exact time is unavailable, explicitly state the available precision.
+- In `Timeline` use exact quotes when they are critical to the turn of the situation.
+- `5 Whys` can be given as a draft from the agent by default, but it should be an area the user can refine or rewrite.
