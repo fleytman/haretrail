@@ -37,9 +37,12 @@ Example content:
 ```bash
 HARETRAIL_SYSTEM_DIR=/path/to/haretrail
 HARETRAIL_DATA_DIR=/path/to/haretrail-data
+HARETRAIL_UI_LANG=en
 ```
 
 This file is local machine configuration. Do not commit it to the system repo.
+
+`HARETRAIL_UI_LANG` sets the language of the skill *trigger phrases* — the words you say to invoke a skill (see [Trigger Language](#trigger-language)). It is separate from `HARETRAIL_ARTIFACT_LANG`, which sets the language the skills *write artifacts* in.
 
 ## What Belongs Where
 
@@ -61,6 +64,57 @@ Data repo:
 - postmortems;
 - imported sources;
 - personal or project overlays.
+
+## Trigger Language
+
+Two different things use a language, and they are configured separately:
+
+- **Skill descriptions** are canonical English. The model reads them and understands a request in any language, so they do not need translating.
+- **Trigger phrases** are the short words a user actually says to invoke a skill (e.g. `debrief`, `сделай дебриф`, `hacer un balance`). The host agent matches your request against them, so they are language-dependent — an English-only trigger list can miss a native-language request.
+
+The installer therefore stores per-language trigger phrases and builds the wrapper/steering dispatch table from them. English is **always merged in as a fallback**, so English commands keep working regardless of the chosen language.
+
+### Choosing the language
+
+On install (interactively) the installer asks for the UI/trigger language, pre-filled with a computed default. The default chain is:
+
+1. `--ui-lang <code>` flag, if given;
+2. `HARETRAIL_UI_LANG` from environment or `config.env`;
+3. `HARETRAIL_ARTIFACT_LANG` from `config.env` (your working-artifact language is a strong hint);
+4. system locale (`$LC_ALL` / `$LANG`, e.g. `ru_RU.UTF-8` → `ru`);
+5. otherwise `en`.
+
+Non-interactive runs (`--yes`, or a pinned `--ui-lang`) take the computed default without prompting. The chosen code is written to `HARETRAIL_UI_LANG` in `config.env` when `--write-config` is used.
+
+### Where phrases live
+
+```text
+haretrail/scripts/triggers/en.json     # versioned English baseline (always merged as fallback)
+~/.haretrail/triggers/<lang>.json       # per-language phrases (generated/edited locally, not committed)
+```
+
+Each file is a flat JSON object mapping a skill name to an array of phrases:
+
+```json
+{
+  "task": ["task", "task-folder", "start a task"],
+  "debrief": ["debrief", "session debrief", "what went wrong"]
+}
+```
+
+You can edit these by hand at any time — keep the keys, change the phrase lists.
+
+### Generating phrases for a language
+
+If you pick a non-English language with no phrase file yet, the installer offers to generate one via a local AI CLI (`claude` or `codex`), seeded from the English baseline and the skill descriptions so phrasing is idiomatic, not word-for-word. The result is written to `~/.haretrail/triggers/<lang>.json` for you to review and refine.
+
+Generate or refresh a language at any time:
+
+```bash
+./scripts/install-connectors.sh --gen-triggers es
+```
+
+If no AI CLI is available (or generation fails), the installer falls back to English-only triggers for that language and prints how to add phrases by hand. Nothing breaks — English triggers always work.
 
 ## Claude
 
@@ -209,6 +263,23 @@ Optionally include agents wrappers only when the target tool requires `~/.agents
   --write-config \
   --include-agents \
   --data-dir /path/to/haretrail-data
+```
+
+Pin a non-default trigger language and run non-interactively (see [Trigger Language](#trigger-language)):
+
+```bash
+./scripts/install-connectors.sh \
+  --mode wrapper \
+  --write-config \
+  --ui-lang ru \
+  --yes \
+  --data-dir /path/to/haretrail-data
+```
+
+Generate or refresh trigger phrases for a language without reinstalling:
+
+```bash
+./scripts/install-connectors.sh --gen-triggers es
 ```
 
 ## Data Repo Initialization

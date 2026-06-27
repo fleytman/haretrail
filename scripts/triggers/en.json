@@ -1,0 +1,11 @@
+{
+  "_comment": "HARE Trail skill trigger phrases (English baseline, versioned). These are short words/phrases a user might say to invoke each skill; the host agent matches the user's request against them. English is ALWAYS merged in as a fallback regardless of the configured HARETRAIL_UI_LANG, so these phrases keep working in any setup. To add or refine phrases for another language, run: install-connectors.sh --gen-triggers <code>  (writes ~/.haretrail/triggers/<code>.json), then edit that file by hand. Keys must match the skill folder names under skills/.",
+  "task": ["task", "task-folder", "work-artifacts", "start a task", "open a task"],
+  "summary": ["summary", "document batch", "sources", "summarize files", "file summaries"],
+  "research": ["research", "research task", "hypotheses", "literature", "verification"],
+  "doc-write": ["doc-write", "write docs", "documentation", "readme", "describe a system"],
+  "debrief": ["debrief", "session debrief", "session mistakes", "what went wrong"],
+  "lessons": ["lessons", "LESSONS.md", "add a lesson", "show lessons"],
+  "postmortem": ["postmortem", "incident", "5 whys", "winback plan"],
+  "contribution-log": ["contribution", "contribution log", "self-review", "invisible work"]
+}
