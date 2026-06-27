@@ -21,6 +21,9 @@ include_kiro_ide=0
 open_workspace=0
 install_mode="source"
 write_config=0
+ui_lang="${HARETRAIL_UI_LANG:-}"   # language for skill trigger phrases / how the user addresses the agent
+gen_triggers=""                     # if set to a lang code, (re)generate trigger phrases for it and exit
+assume_yes=0                        # non-interactive: never prompt
 
 skills=(
   task
@@ -49,6 +52,12 @@ Options:
   --write-config        Write local config.env under ~/.haretrail or --config-dir.
   --data-dir PATH       Data repo root. Overrides HARETRAIL_DATA_DIR for validation output.
   --config-dir PATH     Local config directory. Default: $HARETRAIL_CONFIG_DIR or ~/.haretrail.
+  --ui-lang CODE        Language for skill trigger phrases (how you address the agent), e.g. en, ru, es.
+                        Default chain: --ui-lang -> HARETRAIL_UI_LANG -> HARETRAIL_ARTIFACT_LANG -> $LANG -> en.
+                        English triggers always work as a fallback regardless of this choice.
+  --gen-triggers CODE   (Re)generate trigger phrases for CODE via a local AI CLI, write them to
+                        <config-dir>/triggers/CODE.json, then exit. Use to add/refresh a language later.
+  --yes, -y             Non-interactive: never prompt; use computed defaults.
   --codex-home PATH     Codex home directory. Default: $CODEX_HOME or ~/.codex.
   --agents-home PATH    Agents home directory. Default: $AGENTS_HOME or ~/.agents.
   --claude-home PATH    Claude home directory. Default: $CLAUDE_HOME or ~/.claude.
@@ -111,6 +120,18 @@ while [[ $# -gt 0 ]]; do
       config_dir="${2:-}"
       shift 2
       ;;
+    --ui-lang)
+      ui_lang="${2:-}"
+      shift 2
+      ;;
+    --gen-triggers)
+      gen_triggers="${2:-}"
+      shift 2
+      ;;
+    --yes|-y)
+      assume_yes=1
+      shift
+      ;;
     --codex-home)
       codex_home="${2:-}"
       shift 2
@@ -170,6 +191,257 @@ run() {
 note() {
   printf '%s\n' "$*"
 }
+
+# --- Language / trigger phrase helpers ----------------------------------------
+# Triggers are short words/phrases a user says to invoke a skill; the host agent
+# matches the user's request against them. They are language-dependent (a Russian
+# user's "сделай дебриф" needs Russian triggers), whereas skill DESCRIPTIONS are
+# canonical English (the model understands a request in any language from them).
+# English triggers are always merged in as a fallback. Per-language phrase files
+# live OUTSIDE the repo in <config-dir>/triggers/<lang>.json; only the English
+# baseline (scripts/triggers/en.json) ships versioned with the system repo.
+
+triggers_repo_baseline="$repo_root/scripts/triggers/en.json"
+
+# Read a single KEY=value from an existing config.env (used for the smart default
+# chain: HARETRAIL_UI_LANG falls back to HARETRAIL_ARTIFACT_LANG). Prints nothing
+# if the file or key is absent.
+read_config_value() {
+  local key="$1"
+  [[ -f "$config_file" ]] || return 0
+  # Last assignment wins; strip optional surrounding quotes.
+  local line
+  line="$(grep -E "^${key}=" "$config_file" 2>/dev/null | tail -n 1)"
+  [[ -n "$line" ]] || return 0
+  local val="${line#*=}"
+  val="${val%\"}"
+  val="${val#\"}"
+  printf '%s' "$val"
+}
+
+# Normalise a locale-ish string to a bare 2-letter language code (ru_RU.UTF-8 -> ru).
+normalize_lang() {
+  local raw="$1"
+  raw="${raw%%.*}"   # drop .UTF-8 etc.
+  raw="${raw%%_*}"   # drop _RU etc.
+  raw="${raw%%@*}"   # drop @euro etc.
+  printf '%s' "$raw" | tr '[:upper:]' '[:lower:]'
+}
+
+# Resolve the UI/trigger language via the documented default chain:
+#   --ui-lang flag  ->  HARETRAIL_UI_LANG (env or config)  ->
+#   HARETRAIL_ARTIFACT_LANG (config)  ->  $LANG/$LC_ALL  ->  en
+# Interactive sessions get to confirm/override the computed default.
+resolve_ui_lang() {
+  local computed=""
+  if [[ -n "$ui_lang" ]]; then
+    computed="$ui_lang"                                  # flag or HARETRAIL_UI_LANG env
+  fi
+  if [[ -z "$computed" ]]; then
+    computed="$(read_config_value HARETRAIL_UI_LANG)"
+  fi
+  if [[ -z "$computed" ]]; then
+    computed="$(read_config_value HARETRAIL_ARTIFACT_LANG)"
+  fi
+  if [[ -z "$computed" ]]; then
+    computed="$(normalize_lang "${LC_ALL:-${LANG:-}}")"
+  fi
+  [[ -n "$computed" ]] || computed="en"
+  computed="$(normalize_lang "$computed")"
+
+  # Ask interactively unless suppressed or already pinned via flag/env.
+  if [[ "$assume_yes" -eq 0 && -t 0 && -z "$ui_lang" ]]; then
+    local answer
+    printf 'UI/trigger language for skill wrappers (e.g. en, ru, es) [%s]: ' "$computed" >&2
+    if read -r answer && [[ -n "$answer" ]]; then
+      computed="$(normalize_lang "$answer")"
+    fi
+  fi
+
+  ui_lang="$computed"
+}
+
+# Locate a phrase file for a language: prefer a generated/edited file under the
+# config dir, then the repo baseline for English. Prints the path or nothing.
+triggers_file_for() {
+  local lang="$1"
+  if [[ -f "$config_dir/triggers/$lang.json" ]]; then
+    printf '%s' "$config_dir/triggers/$lang.json"
+  elif [[ "$lang" == "en" && -f "$triggers_repo_baseline" ]]; then
+    printf '%s' "$triggers_repo_baseline"
+  fi
+}
+
+# Extract the phrase list for one skill from one JSON file, as a comma+space
+# joined string. Uses python3 (widely available) and degrades to empty on any
+# error so the caller can fall back to the English baseline / skill name.
+triggers_from_file() {
+  local file="$1" skill="$2"
+  [[ -n "$file" && -f "$file" ]] || return 0
+  command -v python3 >/dev/null 2>&1 || return 0
+  python3 - "$file" "$skill" <<'PY' 2>/dev/null || true
+import json, sys
+try:
+    with open(sys.argv[1], encoding="utf-8") as fh:
+        data = json.load(fh)
+    phrases = data.get(sys.argv[2], [])
+    phrases = [str(p).strip() for p in phrases if str(p).strip()]
+    sys.stdout.write(", ".join(phrases))
+except Exception:
+    pass
+PY
+}
+
+# Build the comma-joined trigger phrase string for one skill: configured language
+# first, English baseline always appended as fallback, de-duplicated, never empty
+# (falls back to the skill name).
+triggers_for_skill() {
+  local skill="$1"
+  local lang_file en_file lang_phrases en_phrases combined
+
+  lang_file="$(triggers_file_for "$ui_lang")"
+  en_file="$(triggers_file_for en)"
+
+  lang_phrases=""
+  if [[ "$ui_lang" != "en" ]]; then
+    lang_phrases="$(triggers_from_file "$lang_file" "$skill")"
+  fi
+  en_phrases="$(triggers_from_file "$en_file" "$skill")"
+
+  # Merge: configured language phrases first, then English fallback. De-dup while
+  # preserving order; if nothing resolved, fall back to the skill name itself.
+  combined="$lang_phrases"
+  if [[ -n "$combined" && -n "$en_phrases" ]]; then
+    combined="$combined, $en_phrases"
+  elif [[ -z "$combined" ]]; then
+    combined="$en_phrases"
+  fi
+  [[ -n "$combined" ]] || combined="$skill"
+
+  printf '%s' "$combined" | awk -v RS=', *' 'NF && !seen[$0]++ { printf "%s%s", (n++?", ":""), $0 }'
+}
+
+# Generate trigger phrases for a non-English language via a local AI CLI (claude
+# or codex), seeding from the English baseline + skill descriptions. Writes
+# <config-dir>/triggers/<lang>.json. Returns non-zero (without failing the whole
+# install) if no CLI is available or generation produced no usable file.
+generate_triggers() {
+  local lang="$1"
+  local out_dir="$config_dir/triggers"
+  local out_file="$out_dir/$lang.json"
+
+  if [[ "$lang" == "en" ]]; then
+    note "English triggers ship as the versioned baseline; nothing to generate."
+    return 0
+  fi
+
+  local cli=""
+  if command -v claude >/dev/null 2>&1; then
+    cli="claude"
+  elif command -v codex >/dev/null 2>&1; then
+    cli="codex"
+  fi
+
+  if [[ -z "$cli" ]]; then
+    note "No local AI CLI (claude/codex) found to generate '$lang' triggers."
+    note "Copy the English baseline and translate the phrases by hand:"
+    note "  mkdir -p $out_dir && cp $triggers_repo_baseline $out_file"
+    note "  # then edit $out_file (keep the JSON keys, translate the phrase lists)"
+    return 1
+  fi
+
+  run mkdir -p "$out_dir"
+
+  # Build the descriptions block so the model adapts phrasing, not blind translation.
+  local descs="" skill
+  for skill in "${skills[@]}"; do
+    descs+="- $skill: $(skill_description "$skill")"$'\n'
+  done
+
+  local baseline_json="{}"
+  [[ -f "$triggers_repo_baseline" ]] && baseline_json="$(cat "$triggers_repo_baseline")"
+
+  local prompt
+  prompt="You localize skill trigger phrases for the HARE Trail CLI into language code '$lang'.
+Trigger phrases are short words/phrases a user would say to invoke a skill; the agent matches the user's request against them. Adapt them naturally for native speakers of '$lang' (idiomatic invocations, NOT literal word-for-word translation). Keep obvious English technical tokens (e.g. README, LESSONS.md, self-review, postmortem) if a native speaker would actually use them.
+
+Skill descriptions (canonical English, for context only):
+$descs
+English baseline phrases (JSON; same keys you must output):
+$baseline_json
+
+Output ONLY a JSON object mapping each skill key above to an array of 4-6 trigger phrases in '$lang'. No prose, no markdown fences, no _comment key. Keys must exactly match: ${skills[*]}."
+
+  if [[ "$dry_run" -eq 1 ]]; then
+    note "[dry-run] would generate $out_file via $cli for language '$lang'"
+    return 0
+  fi
+
+  note "Generating '$lang' trigger phrases via $cli (this calls your local AI CLI)..."
+  # Run from a neutral directory and strip project context so the CLI does not
+  # load this project's skills/CLAUDE.md or leak cwd/git/memory into the answer
+  # (that pollutes the output and can even make the model refuse). A strict
+  # JSON-formatter system prompt keeps the response parseable.
+  local sys_prompt='You are a strict JSON formatter. Output only the exact JSON object the user asks for. Never add prose, explanations, markdown fences, or commentary. Do not use tools.'
+  local generated=""
+  if [[ "$cli" == "claude" ]]; then
+    generated="$(cd / && printf '%s' "$prompt" | claude -p \
+      --system-prompt "$sys_prompt" \
+      --exclude-dynamic-system-prompt-sections \
+      --setting-sources '' 2>/dev/null || true)"
+  else
+    generated="$(cd / && printf '%s' "$prompt" | codex exec - 2>/dev/null || true)"
+  fi
+
+  # Validate and normalise via python. The raw model text goes through a temp
+  # FILE (passed as argv), not stdin, because stdin is already taken by the
+  # heredoc script ('python3 -' reads the program from stdin). The parser trims
+  # to the outermost JSON object, so stray prose or markdown fences are tolerated.
+  local raw_file
+  raw_file="$(mktemp "${TMPDIR:-/tmp}/haretrail-triggers.XXXXXX")" || return 1
+  printf '%s' "$generated" > "$raw_file"
+  if python3 - "$raw_file" "$out_file" "${skills[@]}" <<'PY'
+import json, sys
+raw_path, out_path = sys.argv[1], sys.argv[2]
+want = sys.argv[3:]
+with open(raw_path, encoding="utf-8") as fh:
+    raw = fh.read().strip()
+# Trim to the outermost JSON object if the model added stray text/fences.
+start, end = raw.find("{"), raw.rfind("}")
+if start == -1 or end == -1:
+    sys.exit(1)
+try:
+    data = json.loads(raw[start:end + 1])
+except Exception:
+    sys.exit(1)
+clean = {}
+for k in want:
+    vals = data.get(k, [])
+    if isinstance(vals, str):
+        vals = [vals]
+    vals = [str(v).strip() for v in vals if str(v).strip()]
+    if vals:
+        clean[k] = vals
+if not clean:
+    sys.exit(1)
+clean = {"_comment": "HARE Trail trigger phrases (generated; edit by hand to refine). English is always merged as a fallback.", **clean}
+with open(out_path, "w", encoding="utf-8") as fh:
+    json.dump(clean, fh, ensure_ascii=False, indent=2)
+    fh.write("\n")
+PY
+  then
+    rm -f "$raw_file"
+    note "Wrote generated triggers: $out_file"
+    note "Review and tweak the phrases there; English always stays as a fallback."
+    return 0
+  else
+    rm -f "$raw_file"
+    note "Generation did not return usable JSON. Falling back to English-only triggers for '$lang'."
+    note "You can retry later: install-connectors.sh --gen-triggers $lang   (or edit $out_file by hand)."
+    return 1
+  fi
+}
+# --- end language / trigger helpers -------------------------------------------
 
 write_file() {
   local path="$1"
@@ -293,28 +565,28 @@ skill_description() {
 
   case "$skill" in
     task)
-      printf 'Создавать, находить и обновлять task-folders в HARE Trail data repo work-artifacts. Вести tracker и journal, импортировать материалы.'
+      printf 'Create, find and update task-folders in the HARE Trail data repo work-artifacts. Maintain tracker and journal, import materials.'
       ;;
     summary)
-      printf 'Обрабатывать пакет документов или файлов для HARE Trail: копировать источники, конвертировать форматы, делать summary, file summaries, извлекать цитаты, строить mermaid-схемы.'
+      printf 'Process a batch of documents or files for HARE Trail: copy sources, convert formats, write summaries and file summaries, extract quotes, build mermaid diagrams.'
       ;;
     research)
-      printf 'Вести исследовательскую задачу в HARE Trail: план исследования, sources, гипотезы, verification, prompts для внешних ИИ.'
+      printf 'Run a research task in HARE Trail: research plan, sources, hypotheses, verification, prompts for external AIs.'
       ;;
     doc-write)
-      printf 'Писать и обновлять human-readable документацию в HARE Trail: README, описания систем, процессов и решений.'
+      printf 'Write and update human-readable documentation in HARE Trail: README files, descriptions of systems, processes and decisions.'
       ;;
     debrief)
-      printf 'Читать, создавать и обновлять session debriefs и LESSONS.md в HARE Trail. Записывать ошибки, уроки, коррекции из рабочих сессий.'
+      printf 'Read, create and update session debriefs and LESSONS.md in HARE Trail. Record mistakes, lessons and corrections from working sessions.'
       ;;
     lessons)
-      printf 'Читать и обновлять LESSONS.md в HARE Trail: добавить урок, уточнить формулировку, показать уроки без полного debrief.'
+      printf 'Read and update LESSONS.md in HARE Trail: add a lesson, refine wording, or show lessons without a full debrief.'
       ;;
     postmortem)
-      printf 'Создавать тяжёлые incident-grade postmortems в HARE Trail: Timeline, Impact, 5 Whys, Winback Plan, Lessons Learned.'
+      printf 'Create heavy incident-grade postmortems in HARE Trail: Timeline, Impact, 5 Whys, Winback Plan, Lessons Learned.'
       ;;
     contribution-log)
-      printf 'Вести contribution/self-review logs в HARE Trail: записывать вклад, invisible work, помощь другим, готовить материал для self-review.'
+      printf 'Maintain contribution/self-review logs in HARE Trail: record contributions, invisible work, help given to others, and prepare material for self-review.'
       ;;
     *)
       printf 'HARE Trail %s skill.' "$skill"
@@ -436,15 +708,14 @@ install_kiro_ide() {
   fi
 
   # Build the skill dispatch table for the steering file.
-  local skill_table=""
-  skill_table+="| задача, task-folder, work-artifacts | $repo_root/skills/task/SKILL.md |"$'\n'
-  skill_table+="| summary, пакет документов, sources | $repo_root/skills/summary/SKILL.md |"$'\n'
-  skill_table+="| исследование, research, гипотезы | $repo_root/skills/research/SKILL.md |"$'\n'
-  skill_table+="| документ, doc-write, написать доку | $repo_root/skills/doc-write/SKILL.md |"$'\n'
-  skill_table+="| дебриф, debrief, ошибки сессии | $repo_root/skills/debrief/SKILL.md |"$'\n'
-  skill_table+="| уроки, lessons, LESSONS.md | $repo_root/skills/lessons/SKILL.md |"$'\n'
-  skill_table+="| постмортем, postmortem, инцидент | $repo_root/skills/postmortem/SKILL.md |"$'\n'
-  skill_table+="| вклад, contribution, self-review | $repo_root/skills/contribution-log/SKILL.md |"
+  # Triggers come from the configured UI language (English always merged as a
+  # fallback) so a native-language request reliably dispatches to the right skill.
+  local skill_table="" st_skill st_triggers
+  for st_skill in "${skills[@]}"; do
+    st_triggers="$(triggers_for_skill "$st_skill")"
+    skill_table+="| $st_triggers | $repo_root/skills/$st_skill/SKILL.md |"$'\n'
+  done
+  skill_table="${skill_table%$'\n'}"
 
   # Optional data repo rules references.
   local data_rules=""
@@ -523,7 +794,7 @@ description: \"${desc}\"
 <!-- generated-by=haretrail-install-connectors -->
 # $title (HARE Trail)
 
-Перед работой прочитай каноничный workflow:
+Before acting, read the canonical workflow:
 - \`$repo_root/skills/$skill/SKILL.md\`
 - \`$repo_root/skills/$skill/references/workflow.md\`
 - \`$repo_root/skills/_shared/system-behavior.md\`
@@ -594,6 +865,9 @@ write_local_config() {
 
 HARETRAIL_SYSTEM_DIR=$repo_root
 HARETRAIL_DATA_DIR=$data_dir
+# Language for skill trigger phrases / how you address the agent. English always
+# works as a fallback. Per-language phrases live in $config_dir/triggers/<lang>.json.
+HARETRAIL_UI_LANG=$ui_lang
 "
   note "Wrote local config: $config_file"
 }
@@ -621,7 +895,28 @@ for skill in "${skills[@]}"; do
   require_source_skill "$skill"
 done
 
+# --gen-triggers <lang>: (re)generate phrases for one language and exit. Standalone
+# operation — does not install or modify connectors.
+if [[ -n "$gen_triggers" ]]; then
+  gen_lang="$(normalize_lang "$gen_triggers")"
+  generate_triggers "$gen_lang"
+  exit $?
+fi
+
 validate_data_dir
+
+# Resolve the UI/trigger language once (flag -> env -> config -> $LANG -> en, with
+# an interactive confirm). Auto-generate phrases for a non-English language the
+# first time we see it, so wrapper triggers match how the user actually speaks.
+resolve_ui_lang
+note "UI/trigger language: $ui_lang (English always works as a fallback)"
+if [[ "$ui_lang" != "en" && -z "$(triggers_file_for "$ui_lang")" ]]; then
+  if [[ "$assume_yes" -eq 1 ]]; then
+    note "No '$ui_lang' trigger phrases yet; using English-only triggers (run --gen-triggers $ui_lang to add them)."
+  else
+    generate_triggers "$ui_lang" || true
+  fi
+fi
 
 if [[ "$install_mode" == "wrapper" && -z "$data_dir" ]]; then
   printf 'Wrapper mode requires --data-dir or HARETRAIL_DATA_DIR.\n' >&2
