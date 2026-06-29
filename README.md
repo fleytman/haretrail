@@ -71,7 +71,7 @@ haretrail-data/  # your private notes, work artifacts, debriefs and lessons
 
 See [Claude and Codex Setup](docs/setup-claude-codex.md) for connector modes and per-tool details.
 
-> First-time setup is still experimental — a clean-checkout install has not been fully validated end to end yet. See **Status** below for what is and isn't proven.
+> First-time setup is validated on a clean checkout by `test/smoke` (offline install scripts) and `test/e2e` (real Codex/Claude runtime loading); setup on other environments may still need hardening. See **Status** below.
 
 ## How to use it
 
@@ -112,13 +112,11 @@ Core workflows: `task`, `summary`, `research`, `doc-write`, `debrief`, `lessons`
 
 This is an early public release of the reusable **system layer**. Phase 1 (system/data boundary and name) and Phase 2 (public docs independent of the private corpus) are complete. Phase 3 is in progress: reusable skill sources, templates, a sanitized fixture data repo, a source-link/thin-wrapper connector installer and a data repo initializer are present.
 
-A clean-checkout install has not been fully tested end to end, so treat first-time setup as experimental. The following are intentionally **not done yet** — they are the first steps after this release, not blockers before it:
+A clean-checkout install, the install scripts and runtime skill loading are now validated by `test/smoke` (offline, 66/66) and `test/e2e` (real Codex/Claude, 12/12). Remaining items are hardening, not blockers:
 
-- validate a clean-checkout install path from scratch;
-- prove Claude/Codex runtime loading from fresh sessions;
-- add Docker/container smoke validation;
-- run at least one fixture-only workflow smoke;
-- confirm duplicate skill discovery behavior for Codex and Claude.
+- broaden clean-checkout validation beyond the primary dev environment;
+- decide the data repo git policy;
+- finish duplicate-skill-discovery cleanup (connector backups already kept outside the scanned skill dir; nested `SKILL.md` identified as the recursive-registration cause — issue #22275).
 
 The data repository (your real notes, work artifacts, debriefs, lessons) is separate and private — see the [Design Rule](#design-rule).
 

@@ -11,12 +11,12 @@ This file separates current maturity from the product roadmap after publication.
 | System behavior | Drafted | Reusable behavior is documented, but still needs validation through real installs. |
 | Command contracts | Usable draft | Core workflow contracts and reusable skill source folders are present. |
 | Data repo initialization | Drafted | `init-data-repo.sh` creates a minimal private scaffold. |
-| Connector installer | Install-tested | Source-link and generated thin-wrapper modes exist. |
-| Claude/Codex setup | Drafted | Setup contract exists; fresh runtime loading still needs validation. |
+| Connector installer | Smoke-tested | Source-link/thin-wrapper/Kiro modes; backups kept outside the scanned skill dir; covered by `test/smoke`. |
+| Claude/Codex setup | Drafted | Setup contract exists; runtime loading validated via `test/e2e`. |
 | Templates | Drafted | Core templates are present and need more real-use hardening. |
 | Examples | Drafted | A fictional fixture data repo exists for smoke checks. |
-| Runtime loading | Not validated | Actual Claude/Codex skill loading is not proven from clean fresh sessions. |
-| Docker/container smoke | Planned | Fixture-only install checks are planned, not implemented. |
+| Runtime loading | Validated | Real Codex and Claude load and use skills against a clean checkout via `test/e2e` (12/12). |
+| Docker/container smoke | Implemented | `test/smoke` (offline, 66/66) and `test/e2e` (live agents) validate clean-checkout install and runtime loading. |
 
 ## Maturity Labels
 
@@ -114,8 +114,8 @@ The earlier Phase 1-5 migration work produced this repository, reusable skills, 
 
 Remaining migration-hardening items:
 
-- prove Claude/Codex runtime loading from fresh sessions;
-- add fixture/container smoke;
+- done — Claude/Codex runtime loading proven from a clean checkout (`test/e2e`, real agents);
+- done — fixture/container smoke added (`test/smoke` + `test/e2e`);
 - decide data repo git policy;
-- clean up duplicate skill discovery;
+- duplicate skill discovery — partially: connector backups relocated outside the scanned skill dir, and nested `SKILL.md` identified as the recursive-registration cause (issue #22275); per-skill `agents/openai.yaml` still to retest;
 - keep privacy scans clean before any public push.
