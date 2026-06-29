@@ -16,6 +16,9 @@ Current maturity: reusable skill source folders are present under `skills/`, sou
 | `lessons` | Lessons must be read, added or refined without a full debrief. | Distilled lesson updates. | Data repo `LESSONS.md` |
 | `postmortem` | Incident-grade analysis is needed. | Timeline, impact, root cause, corrective actions, lessons. | Data repo `postmortems/` |
 | `contribution-log` | Invisible work, glue work or self-review evidence must be recorded. | Contribution log or visibility artifact. | Data repo task folder or notes |
+| `work-evidence` | Evidence of your own work over a period must be gathered from sources. | Normalized, source-bound work ledger (engine for `daily`/`contribution-log`). | Consumer's `sources/` |
+| `daily` | A work standup is needed ("what I did from X to Y"). | 4-section standup: progress, invisible work, insights, blockers. | Data repo `daily/YYYY-MM-DD/` |
+| `retro` | A reflective retrospective over a period is needed (sprint / 2 weeks / before a demo). | Retro: wins, disappointments, resolved-vs-open, open questions, thanks owed, team pains. | Data repo `retro/YYYY-MM-DD/` |
 
 ## `task`
 
@@ -135,6 +138,64 @@ Use when work matters but may be invisible:
 - glue work;
 - self-review evidence;
 - started-but-not-finished work with real value.
+
+## `work-evidence`
+
+Shared engine. Gathers and normalizes evidence of your own work over a period from configured
+sources (tracker, chat, code host, work notes and debriefs). Does not render a human-facing report —
+it produces a source-bound ledger consumed by `daily` and `contribution-log`.
+
+Rules:
+
+- read sources, filters and language from `~/.haretrail/`; do not hardcode defaults;
+- distinguish involvement type (created / merged / committed / reviewed / commented / pending) and key
+  each by the time of the action, not by object creation date;
+- record WHO did WHAT; "who clicked the button" is not "whose decision";
+- status comes from the source system, not from narrative; dedup across sources;
+- keep only work (filter personal); save raw per-source output under the consumer's `sources/`.
+
+## `daily`
+
+Thin consumer of `work-evidence`. Builds a work standup for a short period ("since the last daily")
+and renders it into four sections.
+
+Output sections:
+
+1. progress on tasks (grouped by ticket; status and who moved it);
+2. activities outside tasks (invisible work: help to colleagues, coordination, reviews of others' PRs);
+3. insights / problems / questions (including lessons from `LESSONS.md` and debriefs in the period);
+4. blockers.
+
+Rules:
+
+- cadence, sources and language from `~/.haretrail/`; ask and save on first run;
+- explicit attribution (who did what); report tone (a lead may read it) — neutral, no slang;
+- write a per-daily folder (`daily/YYYY-MM-DD/standup.md` + `sources/`); `daily/` is a local git repo;
+- share via a separate export, not the repo; roll up into `contribution-log` for long periods.
+
+## `retro`
+
+Reflective retrospective over a period (sprint / 2 weeks / before a demo). Thin consumer of
+`work-evidence`, but with a different, interactive and social mechanism.
+
+Sources (dailies-first):
+
+1. **Dailies** (`{data-repo}/daily/*/standup.md`) — primary: roll up insights/blockers/progress and
+   **check resolution status** (resolved / still hurting); ask the user when unclear.
+2. **DMs** — complaints and problems you raised, open questions (yours unanswered and unanswered to you),
+   help received → who to thank / what you owe.
+3. **Chat list (from config)** — problems raised, especially threads you participated in; optional
+   separate agent for general problem discovery ("team pains").
+
+Output sections: wins; disappointments/still-hurting; resolved-vs-open; open questions; thanks owed;
+team pains; action items.
+
+Rules:
+
+- dailies-first + two-tier + schedule (fast roll-up of existing dailies; live Slack/source run is
+  optional enrichment in the background);
+- reflective and interactive (may ask "resolved? still hurting?"); explicit attribution; report tone;
+- feeds `contribution-log` (help/thanks, invisible work) — do not duplicate it.
 
 ## Global Command Rules
 

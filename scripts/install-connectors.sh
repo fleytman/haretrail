@@ -34,6 +34,9 @@ skills=(
   lessons
   postmortem
   contribution-log
+  work-evidence
+  daily
+  retro
 )
 
 usage() {
@@ -554,6 +557,15 @@ skill_title() {
     task)
       printf 'Task'
       ;;
+    work-evidence)
+      printf 'Work Evidence'
+      ;;
+    daily)
+      printf 'Daily'
+      ;;
+    retro)
+      printf 'Retro'
+      ;;
     *)
       printf '%s' "$skill"
       ;;
@@ -587,6 +599,15 @@ skill_description() {
       ;;
     contribution-log)
       printf 'Maintain contribution/self-review logs in HARE Trail: record contributions, invisible work, help given to others, and prepare material for self-review.'
+      ;;
+    work-evidence)
+      printf 'Движок сбора evidence о работе за период из трекера/чата/code-host/заметок в нормализованный source-bound ledger для daily и contribution-log.'
+      ;;
+    daily)
+      printf 'Собрать рабочий daily-стендап за период поверх work-evidence: 4 секции (прогресс, invisible work, инсайты/вопросы, блокеры), атрибуция КТО ЧТО.'
+      ;;
+    retro)
+      printf 'Собрать рабочую ретроспективу за период (дейлики + ЛС + список чатов): что зашло, что расстроило, что решилось vs открыто, открытые вопросы, кого поблагодарить, боли команды.'
       ;;
     *)
       printf 'HARE Trail %s skill.' "$skill"
@@ -868,6 +889,18 @@ HARETRAIL_DATA_DIR=$data_dir
 # Language for skill trigger phrases / how you address the agent. English always
 # works as a fallback. Per-language phrases live in $config_dir/triggers/<lang>.json.
 HARETRAIL_UI_LANG=$ui_lang
+
+# Optional settings for the daily / retro / work-evidence skills.
+# Fill in on first run (the skill asks and saves them here). Do not hardcode defaults.
+# HARETRAIL_TRACKER=          # task tracker, e.g. jira (+ access: mcp/cli/api)
+# HARETRAIL_CHAT=             # team chat, e.g. slack (+ access)
+# HARETRAIL_CODEHOST=         # code host, e.g. github (+ login/org)
+# HARETRAIL_PULL_STRATEGY=    # all | partial
+# HARETRAIL_WORK_FILTER=      # work vs personal: org, ticket prefixes, personal paths/repos
+# HARETRAIL_DAILY_CADENCE=    # e.g. mon,thu
+# HARETRAIL_RETRO_CADENCE=    # e.g. 2w (retro)
+# HARETRAIL_RETRO_CHATS=      # chats to scan for problems (retro)
+# HARETRAIL_LANG=             # output language
 "
   note "Wrote local config: $config_file"
 }

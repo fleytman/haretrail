@@ -7,5 +7,8 @@
   "debrief": ["debrief", "session debrief", "session mistakes", "what went wrong"],
   "lessons": ["lessons", "LESSONS.md", "add a lesson", "show lessons"],
   "postmortem": ["postmortem", "incident", "5 whys", "winback plan"],
-  "contribution-log": ["contribution", "contribution log", "self-review", "invisible work"]
+  "contribution-log": ["contribution", "contribution log", "self-review", "invisible work"],
+  "work-evidence": ["work evidence", "gather my work", "evidence ledger", "what I did data"],
+  "daily": ["daily", "standup", "what I did", "daily standup", "what did I do this week"],
+  "retro": ["retro", "retrospective", "what went well", "what went badly", "sprint retro", "prep for demo"]
 }
